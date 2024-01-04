@@ -1,0 +1,17 @@
+{
+  "name": "@devblocks/models",
+  "version": "1.0.0",
+  "description": "This sub-package represents the common models, to be used across Devblocks.",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf build/ lib/ node_modules/",
+    "lint": "eslint --fix --ext .ts src/"
+  },
+  "devDependencies": {
+    "@devblocks/tsconfig": "1.0.0",
+    "eslint-config-devblocks-base": "1.0.0"
+  },
+  "private": true
+}

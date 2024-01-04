@@ -1,0 +1,15 @@
+{
+    "extends": "@devblocks/tsconfig",
+    "compilerOptions": {
+        "noEmit": false,
+        "outDir": "./lib",
+        "rootDir": "./src/",
+        "declaration": true,
+        "declarationDir": "lib/types",
+        "baseUrl": "./",
+        "typeRoots": [ "../../node_modules/@types"]
+    },
+    "exclude": [
+        "lib"
+    ]
+}

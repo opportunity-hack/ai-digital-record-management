@@ -1,0 +1,17 @@
+# Set default behavior to automatically normalize line 
+# endings based on user's machine
+* text=auto
+
+# Force batch scripts to always use CRLF line endings
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+*.{ics,[iI][cC][sS]} text eol=crlf
+
+# Force bash scripts to always use LF line endings
+*.sh text eol=lf
+
+# Yarn related git attributes
+/.yarn/**            linguist-vendored
+/.yarn/releases/*    binary
+/.yarn/plugins/**/*  binary
+/.pnp.*              binary linguist-generated

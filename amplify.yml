@@ -1,0 +1,19 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - yarn --cwd="../.." install
+        build:
+          commands:
+            - yarn --cwd="../.." run release
+      artifacts:
+        baseDirectory: apps/devblocks-web/.next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+      buildPath: /
+    appRoot: apps/devblocks-web

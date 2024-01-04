@@ -1,0 +1,28 @@
+{
+  "name": "@devblocks/commitlint",
+  "version": "1.0.0",
+  "description": "This sub-package represents the library used to expose Devblocks's commit linting configuration.",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "bin": {
+    "commit-msg": "bin/commit-msg",
+    "pre-commit": "bin/pre-commit"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf build/ lib/ node_modules/",
+    "lint": "eslint --fix --ext .ts src/"
+  },
+  "dependencies": {
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
+    "@commitlint/config-lerna-scopes": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@devblocks/tsconfig": "1.0.0",
+    "eslint-config-devblocks-base": "1.0.0"
+  },
+  "private": true
+}
+
