@@ -1,0 +1,10 @@
+{
+  "name": "@devblocks/tsconfig",
+  "version": "1.0.0",
+  "description": "This sub-package represents the library used to expose Monorepo's Typescript configuration.",
+  "main": "tsconfig.json",
+  "scripts": {
+    "clean": "rimraf build/ dist/ node_modules/"
+  },
+  "private": true
+}

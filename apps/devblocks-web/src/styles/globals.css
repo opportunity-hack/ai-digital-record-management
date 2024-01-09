@@ -1,0 +1,19 @@
+@import './fonts.css';
+@import './colors.css';
+@import './animations.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.shadow-box {
+    border-width: 2px;
+    background-color: white;
+    border-radius: 0.25rem;
+    border-color: var(--color-primary-text);
+    box-shadow: 0rem 0.25rem var(--color-primary-text);
+}
+
+.CodeMirror {
+    border-radius: 5px;
+}

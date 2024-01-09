@@ -1,0 +1,26 @@
+.gradient {
+    --color-purple: #8000ff;
+    --color-light-purple: #cf59e6;
+    --color-light-blue: #6bc5f8;
+
+    background: linear-gradient(-45deg, #ffcfdf, #b0f3f1, #ffcfdf, #b0f3f1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: gradient_shift 5s ease-in-out infinite;
+}
+
+@keyframes gradient_shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 0%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "opportunity-amplify-stack": {
+    "awsuserpoolsid": "us-west-2_H0Ykoa6qg",
+    "amplifyappid": "dgu4j4s1kpu9q",
+    "awsprojectregion": "us-west-2",
+    "awscognitoregion": "us-west-2",
+    "awsuserpoolswebclientid": "2ke29h9qqgagedm1ou387m1ttq",
+    "awscognitoidentitypoolid": "us-west-2:d6060dfa-97e0-4324-b086-e3541339c0a7"
+  }
+}

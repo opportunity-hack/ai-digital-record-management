@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target":"ESNext",
+    "module": "commonjs",
+    "lib": ["ESNext", "es2021", "es2021.intl", "es2017.object", "es2021.string"],
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization":true,
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
