@@ -1,0 +1,22 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo 'Linting the commit message...'
+
+npx --no -- commitlint --edit $1 || (echo "commitlint failed, expected format is:
+#######################################################################################
+<type>(scope): <subject - max length 72 characters>
+[body - max length 500 characters]
+
+# Example:
+# feat(api): added ability to dance
+# Dance like you mean it!
+
+########################################################################################
+# types:             [build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test]
+# '<>':              means REQUIRED, will always need to get replaced by some content
+# '[]':              means OPTIONAL, will sometimes need to get replaced by some content
+#######################################################################################
+" && (exit 1))
+
+echo 'Linting files...'
