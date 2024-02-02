@@ -1,5 +1,5 @@
-import type { AmplifyConfiguration } from "@devblocks/models";
 import { APP_NAME, Constants } from "@devblocks/models";
+import type { AmplifyStackConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
 import { aws_amplify, CfnOutput, Stack } from "aws-cdk-lib";
 import type { Construct } from "constructs";
@@ -14,7 +14,7 @@ export class AmplifyStack extends Stack {
    * @param id the name to give the stack on AWS Cloudformation.
    * @param props various properties to be passed in
    */
-  constructor(scope: Construct, id: string, props: StackProps & { amplifyStackConfiguration: AmplifyConfiguration; stage: string }) {
+  constructor(scope: Construct, id: string, props: StackProps & { amplifyStackConfiguration: AmplifyStackConfiguration; stage: string; searchDocumentEndpoint: string }) {
     super(scope, id, props);
 
     // The website uses NextJS SSG which will be deployed by uploading the .zip file to Amplify.
@@ -22,6 +22,7 @@ export class AmplifyStack extends Stack {
       name: `${props.amplifyStackConfiguration.amplifyAppName}`,
       iamServiceRole: `${props.amplifyStackConfiguration.amplifyServiceRoleName}`,
       description: `The ${APP_NAME} AWS Amplify Application`,
+      environmentVariables: [{ name: "SEARCH_DOCUMENT_API_ENDPOINT", value: props.searchDocumentEndpoint }],
     });
 
     const authStack = new AmplifyAuthStack(this, `${props.amplifyStackConfiguration.amplifyAuthConfiguration.stackName}`, {

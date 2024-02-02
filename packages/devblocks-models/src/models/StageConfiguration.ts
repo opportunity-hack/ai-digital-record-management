@@ -1,5 +1,6 @@
-import type { AmplifyConfiguration } from "./ServiceConfiguration";
+import type { AmplifyStackConfiguration, DocumentSearchStackConfiguration } from "./ServiceConfiguration";
 
 export interface StageConfiguration {
-  readonly amplifyStackConfiguration: AmplifyConfiguration;
+  readonly amplifyStackConfiguration: AmplifyStackConfiguration;
+  readonly documentSearchStackConfiguration: DocumentSearchStackConfiguration;
 }

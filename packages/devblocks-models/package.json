@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf lib/ && tsc",
     "clean": "rimraf build/ lib/ node_modules/",
     "lint": "eslint --fix --ext .ts src/"
   },

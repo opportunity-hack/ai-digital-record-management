@@ -18,4 +18,22 @@ export const INFRA_CONFIG: StageConfiguration = {
       authenticatedRoleName: `${ENVIRONMENT_NAME}-authenticated-role`,
     },
   },
+
+  documentSearchStackConfiguration: {
+    stackName: `${ENVIRONMENT_NAME}-document-search-stack`,
+    documentStorageBucketName: `${ENVIRONMENT_NAME}-bucket-storage`,
+    bulkUploadDocumentsLambdaName: `${ENVIRONMENT_NAME}-upload-document-lambda`,
+    deleteDocumentLambdaName: `${ENVIRONMENT_NAME}-delete-document-lambda`,
+
+    processDocumentLambdaName: `${ENVIRONMENT_NAME}-process-document-lambda`,
+    processDocumentStateMachineName: `${ENVIRONMENT_NAME}-process-document-state-machine`,
+    objectCreatedEventRuleName: `${ENVIRONMENT_NAME}-object-created-event-rule`,
+    documentSearchIndexName: `${ENVIRONMENT_NAME}-document-search-index`,
+
+    searchDocumentApiName: `${ENVIRONMENT_NAME}-search-document-api`,
+    searchDocumentLambdaName: `${ENVIRONMENT_NAME}-search-document-lambda`,
+    searchDocumentDeploymentName: `${ENVIRONMENT_NAME}-search-document-deployment`,
+    searchDocumentStageName: `${ENVIRONMENT_NAME}-search-document-stage`,
+    searchDocumentLogsName: `${ENVIRONMENT_NAME}-search-document-logs`,
+  },
 };

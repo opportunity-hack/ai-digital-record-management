@@ -1,7 +1,8 @@
-import type { StageConfiguration } from "@devblocks/models";
+import type { StageConfiguration } from "@devblocks/models/src/models/StageConfiguration";
 import type { App, Environment } from "aws-cdk-lib";
 
 import { AmplifyStack } from "../stacks/AmplifyStack";
+import { DocumentSearchStack } from "../stacks/DocumentSearchStack";
 
 export class StageUtils {
   private readonly configuration: StageConfiguration;
@@ -20,10 +21,18 @@ export class StageUtils {
   }
 
   setupStages = () => {
-    new AmplifyStack(this.app, this.configuration.amplifyStackConfiguration.stackName, {
+    const documentSearchStack = new DocumentSearchStack(this.app, this.configuration.documentSearchStackConfiguration.stackName, {
+      env: this.env,
+      stage: this.stage,
+      documentSearchStackConfiguration: this.configuration.documentSearchStackConfiguration,
+    });
+
+    const amplifyStack = new AmplifyStack(this.app, this.configuration.amplifyStackConfiguration.stackName, {
       env: this.env,
       stage: this.stage,
       amplifyStackConfiguration: this.configuration.amplifyStackConfiguration,
+      searchDocumentEndpoint: documentSearchStack.searchDocumentEndpoint,
     });
+    amplifyStack.addDependency(documentSearchStack);
   };
 }

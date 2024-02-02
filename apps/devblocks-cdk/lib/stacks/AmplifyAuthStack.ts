@@ -1,5 +1,5 @@
-import type { AmplifyAuthConfiguration } from "@devblocks/models";
 import { APP_NAME } from "@devblocks/models";
+import type { AmplifyAuthConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
 import { Duration, NestedStack } from "aws-cdk-lib";
 import { AccountRecovery, CfnIdentityPool, CfnIdentityPoolRoleAttachment, UserPool, UserPoolClient, VerificationEmailStyle } from "aws-cdk-lib/aws-cognito";
