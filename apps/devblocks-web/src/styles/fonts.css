@@ -39,3 +39,13 @@
     src: url('/fonts/ibm-plex-mono/ibm-plex-mono-Bold.ttf') format('truetype');
     font-weight: 700;
 }
+
+
+/* ================================================
+  Cutive Mono
+================================================ */
+@font-face {
+    font-family: 'Cutive Mono';
+    src: url('/fonts/cutive-mono/cutive-mono-Regular.ttf') format('truetype');
+    font-weight: 400;
+}

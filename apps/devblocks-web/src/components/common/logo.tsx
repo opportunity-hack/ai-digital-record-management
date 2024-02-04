@@ -8,7 +8,6 @@ export default function Logo({ className, hideText }: { className?: string; hide
   return (
     <Link className={`flex flex-row items-center font-sans font-bold ${className}`} href={routes.home}>
       <Image className="mr-4 max-w-sm" src={logo} alt="" height={40} />
-      <span className={hideText ? "hidden md:flex" : ""}>devblocks</span>
     </Link>
   );
 }

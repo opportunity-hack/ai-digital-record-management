@@ -1,39 +1,94 @@
-import { Auth } from "aws-amplify";
+import { API, Amplify, Auth } from "aws-amplify";
 import { useEffect, useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
 import DashboardKeysLayout from "@/components/dashboard/endpoints/layout";
+import AccountButton from "@/components/account/button";
+import { Constants } from "@devblocks/models";
+import APINames from "@/constants/api_names";
+import Spinner from "@/components/common/loading-spinner";
+
+import { CalendarMonth, LocationOn, Title, List } from "@mui/icons-material";
 
 export default function DashboardKeys() {
-  const [apiKey, setApiKey] = useState<string>("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-  useEffect(() => {
-    const getIdentityId = async () => {
-      const session = await Auth.currentSession();
-      return session.getIdToken().getJwtToken();
-    };
-
-    getIdentityId().then((identityId) => {
-      // TODO: refactor code so that the URL is not baked into the code.
-      fetch("https://o6e9mlz56c.execute-api.us-east-1.amazonaws.com/prod/resources", {
-        method: "GET",
+  const onSearch = async (event: any) => {
+    event.preventDefault();
+    setIsSearching(true);
+    try {
+      const apiResults = (await API.post(APINames.searchDocuments, "", {
         headers: {
-          Authorization: `${identityId}`,
+          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
         },
-      }).then((res) => console.log(res.json().then((data) => setApiKey(data.api_key))));
-    });
-  }, []);
-
+        body: {
+          text: searchText,
+        },
+      }))['message']['hits']
+      setSearchResults(apiResults);
+      console.log(apiResults)
+    } catch (e) {
+      console.error(e);
+    }
+    setIsSearching(false);
+  }
   return (
     <DashboardKeysLayout>
-      <div className="shadow-box w-full flex-1 p-12">
-        <h1 className="font-mono text-lg font-bold">API Keys</h1>
-        <p className="max-w-lg pt-4 text-base font-semibold">Below, you will find your confidential API keys. Make sure you keep your keys safe and secure 🔒.</p>
-        <p className="max-w-lg pb-8 pt-4 text-base">Do your best to prevent yourself from distributing your API Keys or exposing it within browser or client-side code.</p>
+      <div className="flex flex-col w-full">
+        <form className="flex flex-col w-full space-y-2" onSubmit={onSearch}>
+          <div className="w-full h-12 shadow-box flex-row flex items-center px-2 text-base">
+            <SearchIcon />
+            <input className="ml-2 outline-none w-full" onChange={(e) => setSearchText(e.target.value)} />
+            <button className="flex items-center justify-center w-20 h-7 bg-pc text-white rounded font-mono font-semibold text-sm outline-none border-none max-w-full -mt-0.5 outline-0 border-0" type="submit" disabled={isSearching}>
+              {isSearching ? <Spinner /> : "SEARCH!"}
+            </button>
+          </div>
 
-        <div className="shadow-box w-full max-w-lg">
-          <div className="rounded-t bg-pt p-2 text-center font-bold text-white">API Key</div>
-          <div className="p-2 text-center font-semibold">{apiKey}</div>
-        </div>
+          <button className="flex items-center justify-center w-full h-12 bg-pc text-white rounded font-mono font-semibold text-sm outline-none border-none max-w-full mt-8 outline-0 border-0" type="submit" disabled={isSearching}>
+            {isSearching ? <Spinner /> : "SEARCH!"}
+          </button>
+        </form>
+        <table className="flex flex-col space-y-4 mt-4">
+          <tr className="w-full flex-row flex shadow-box">
+            <th className="flex-1 space-x-2 flex items-center pl-2 py-1">
+              <List />
+              <text>Index</text>
+            </th>
+            <th className="flex-1 space-x-2 flex items-center py-1">
+              <Title />
+              <text>Text</text>
+            </th>
+            <th className="flex-1 space-x-2 flex items-center py-1">
+              <CalendarMonth />
+              <text>Date</text>
+            </th>
+            <th className="flex-1 space-x-2 flex items-center py-1">
+              <LocationOn />
+              <text>Location</text>
+            </th>
+          </tr>
+          {
+            searchResults.map((result: any) => {
+              return (
+                <tr className="w-full flex-row flex shadow-box h-16 p-2">
+                  <td className="flex-1 line-clamp-2 border-r-2 border-bc p-1">
+                    {result["_id"]}
+                  </td>
+                  <td className="flex-1 line-clamp-2 border-r-2 border-bc p-1">
+                    {result["_source"]["text"]}
+                  </td>
+                  <td className="flex-1 border-r-2 border-bc p-1">
+                    {result["_source"]["date"]}
+                  </td>
+                  <td className="flex-1 border-r-2 border-bc p-1">
+                    {result["_source"]["location"]}
+                  </td>
+                </tr>
+              )
+            })}
+        </table>
       </div>
     </DashboardKeysLayout>
   );

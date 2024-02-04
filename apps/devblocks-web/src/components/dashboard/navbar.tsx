@@ -1,4 +1,4 @@
-import ApiIcon from "@mui/icons-material/Api";
+import SearchIcon from "@mui/icons-material/Search";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
@@ -20,11 +20,11 @@ export default function DashboardNavbar() {
         <span className="mt-3 pl-2 pt-2 font-mono text-xs font-black text-st">SERVICES</span>
 
         <DashboardItem Icon={RocketLaunchIcon} title="Getting Started" href={routes.dashboard} depth={3} />
-        <DashboardItem Icon={ApiIcon} title="API Key" href={routes.dashboard_endpoints} depth={3} />
+        <DashboardItem Icon={SearchIcon} title="Search" href={routes.dashboard_endpoints} depth={3} />
+
+        {/* If the user is an admin, then show them the following */}
         <hr className="" />
 
-        <span className="mt-3 pl-2 pt-2 font-mono text-xs font-black text-st">RESOURCES</span>
-        <DashboardItem Icon={MenuBookRoundedIcon} title="Documentation" href={routes.docs} depth={3} />
       </span>
       <span className="space-y-4">
         {/* <DashboardItem Icon={SettingsRoundedIcon} title="Settings" href={routes.docs} depth={3} /> */}

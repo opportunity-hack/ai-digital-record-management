@@ -64,7 +64,7 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region || "us-east-1",
+        REGION: props.env?.region ?? "us-east-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() || "",
       },
@@ -112,9 +112,9 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region || "us-east-1",
+        REGION: props.env?.region ?? "us-east-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
-        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() || "",
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
     });
     searchDocumentLambda.addToRolePolicy(
@@ -129,15 +129,19 @@ export class DocumentSearchStack extends Stack {
       restApiName: `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}`,
       handler: searchDocumentLambda,
       proxy: false,
+      defaultCorsPreflightOptions: {
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+        allowHeaders: aws_apigateway.Cors.DEFAULT_HEADERS,
+        allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      }
     });
-    searchDocumentApi.root.addMethod("GET");
-    searchDocumentApi.root.addMethod("POST");
+    const searchDocumentIntegration = new aws_apigateway.LambdaIntegration(searchDocumentLambda);
+    searchDocumentApi.root.addMethod("POST", searchDocumentIntegration)
 
     const searchDocumentApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.searchDocumentDeploymentName}-${props.stage}-${props.env}`, {
       api: searchDocumentApi,
     });
 
-    // const searchDocumentApiProdLogGroup = new aws_logs.LogGroup(this, `${props.documentSearchStackConfiguration.searchDocumentLogsName}-${props.stage}-${props.env}`);
     new aws_apigateway.Stage(this, `${props.documentSearchStackConfiguration.searchDocumentStageName}-${props.stage}-${props.env}`, {
       stageName: `${props.documentSearchStackConfiguration.searchDocumentStageName}-${props.stage}`,
       deployment: searchDocumentApiDeployment,
@@ -145,11 +149,11 @@ export class DocumentSearchStack extends Stack {
 
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
-      value: searchDocumentApi.url,
+      value: props.env?.region ?? "us-east-1",
     })
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
-      value: props.env?.region || "us-east-1",
+      value: searchDocumentApi.url,
     })
 
     this.searchDocumentEndpoint = searchDocumentApi.url;

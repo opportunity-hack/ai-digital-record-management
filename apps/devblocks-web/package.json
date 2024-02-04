@@ -19,6 +19,7 @@
     "@lezer/highlight": "^1.1.6",
     "@mui/icons-material": "^5.14.14",
     "@mui/material": "^5.14.14",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@uiw/codemirror-theme-vscode": "^4.21.20",
     "@uiw/codemirror-themes": "^4.21.13",
     "@uiw/react-codemirror": "^4.21.13",

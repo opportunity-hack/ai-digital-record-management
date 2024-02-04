@@ -47,14 +47,6 @@ export class AmplifyAuthStack extends NestedStack {
           mutable: true,
           required: true,
         },
-        givenName: {
-          mutable: true,
-          required: true,
-        },
-        familyName: {
-          mutable: true,
-          required: true,
-        },
       },
       passwordPolicy: {
         tempPasswordValidity: Duration.hours(24),
@@ -65,7 +57,7 @@ export class AmplifyAuthStack extends NestedStack {
         requireLowercase: true,
       },
       signInCaseSensitive: false,
-      accountRecovery: AccountRecovery.EMAIL_ONLY,
+      accountRecovery: AccountRecovery.EMAIL_ONLY
     });
 
     // This user pool client will

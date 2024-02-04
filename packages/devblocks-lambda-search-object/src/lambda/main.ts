@@ -16,12 +16,18 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
   console.log(parsedBody);
   console.log(parsedBody.text);
 
-  return {
+  const searchResults = await search(parsedBody.text);
+  const response = {
     statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
     body: JSON.stringify({
-      message: await search(parsedBody.text),
+      message: searchResults,
     }),
   };
+  return response
 };
 
 const parseBody = (body: string | null) => {

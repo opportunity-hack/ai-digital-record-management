@@ -2,14 +2,15 @@ import Link from "next/link";
 
 import Logo from "@/components/common/logo";
 import routes from "@/constants/routes";
+import { GitHub } from "@mui/icons-material";
 
 export default function Footer() {
   return (
-    <div className="mt-24 flex w-11/12 max-w-5xl flex-row">
-      <span className="flex flex-col">
-        <Logo className="text-3xl" />
-        <Link className="max-w-sm:w-full my-8 items-center justify-center rounded-md bg-pc p-4 text-center font-black text-bg" href={routes.login}>
-          Try Devblocks for Free
+    <div className="mt-48 flex w-11/12 max-w-5xl flex-row items-center justify-center">
+      <span className="flex flex-col font-mono justify-center items-center font-semibold space-y-4">
+        <text>Made at Opportunity Hacks 2023</text>
+        <Link className="flex items-center" href="https://github.com/2023-opportunity-hack/syntax-error--DigitalRecordsManagementforMuseumsandHistoricalSites">
+          <GitHub />
         </Link>
       </span>
       <span />
