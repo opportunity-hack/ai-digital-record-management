@@ -9,13 +9,16 @@ import AccountInput from "@/components/account/input";
 import AccountPasswordInput from "@/components/account/password-input";
 import routes from "@/constants/routes";
 import { signInWithEmail } from "@/services/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function Login() {
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("redirect") ?? routes.dashboard;
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [loginDisabled, setLoginDisabled] = useState<boolean>(false);
-
   const router = useRouter();
 
   const onSubmit = async (event: SyntheticEvent) => {
@@ -24,7 +27,7 @@ export default function Login() {
     const response = await signInWithEmail(email, password);
 
     if (response === "User is not confirmed.") router.push(`${routes.confirm}?username=${email}`);
-    if (response === "Successfully signed in") router.push(`${routes.dashboard}`);
+    if (response === "Successfully signed in") router.push(redirect);
 
     setStatus(response);
 
