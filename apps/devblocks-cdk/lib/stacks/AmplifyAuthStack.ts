@@ -46,7 +46,7 @@ export class AmplifyAuthStack extends NestedStack {
         email: {
           mutable: true,
           required: true,
-        },
+        }
       },
       passwordPolicy: {
         tempPasswordValidity: Duration.hours(24),

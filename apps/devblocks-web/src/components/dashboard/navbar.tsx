@@ -12,7 +12,7 @@ export default function DashboardNavbar() {
   const router = useRouter();
   const onLogout = () => {
     signOut();
-    router.push(routes.login);
+    router.push(routes.home);
   };
   return (
     <div className="flex h-full flex-col justify-between space-y-2  rounded border-2 border-pt bg-white px-4 py-2 shadow-[0rem_0.25rem_var(--color-primary-text)]">

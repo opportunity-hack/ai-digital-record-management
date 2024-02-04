@@ -8,12 +8,14 @@ import { Constants } from "@devblocks/models";
 import APINames from "@/constants/api_names";
 import Spinner from "@/components/common/loading-spinner";
 
-import { CalendarMonth, LocationOn, Title, List } from "@mui/icons-material";
+import { CalendarMonth, LocationOn, Title, List, Tag } from "@mui/icons-material";
+import withAuthenticator from "@/components/template/locked";
 
 export default function DashboardKeys() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   const onSearch = async (event: any) => {
     event.preventDefault();
@@ -34,7 +36,7 @@ export default function DashboardKeys() {
     }
     setIsSearching(false);
   }
-  return (
+  return withAuthenticator(
     <DashboardKeysLayout>
       <div className="flex flex-col w-full">
         <form className="flex flex-col w-full space-y-2" onSubmit={onSearch}>
@@ -50,7 +52,7 @@ export default function DashboardKeys() {
             {isSearching ? <Spinner /> : "SEARCH!"}
           </button>
         </form>
-        <table className="flex flex-col space-y-4 mt-4">
+        <table className="flex flex-col -space-y-1 mt-4">
           <tr className="w-full flex-row flex shadow-box">
             <th className="flex-1 space-x-2 flex items-center pl-2 py-1">
               <List />
@@ -68,23 +70,36 @@ export default function DashboardKeys() {
               <LocationOn />
               <text>Location</text>
             </th>
+            <th className="flex-1 space-x-2 flex items-center py-1">
+              <Tag />
+              <text>Tags</text>
+            </th>
+            {isAdmin && <th className="flex-1 space-x-2 flex items-center py-1" />}
           </tr>
           {
             searchResults.map((result: any) => {
               return (
-                <tr className="w-full flex-row flex shadow-box h-16 p-2">
-                  <td className="flex-1 line-clamp-2 border-r-2 border-bc p-1">
+                <tr className="w-full flex-row flex shadow-box h-32 p-2">
+                  <td className="flex-1 line-clamp-4 border-r-2 border-bc p-1 overflow-y-auto">
                     {result["_id"]}
                   </td>
-                  <td className="flex-1 line-clamp-2 border-r-2 border-bc p-1">
+                  <td className="flex-1 line-clamp-2 border-r-2 border-bc p-1 overflow-y-auto">
                     {result["_source"]["text"]}
                   </td>
-                  <td className="flex-1 border-r-2 border-bc p-1">
+                  <td className="flex-1 border-r-2 border-bc p-1 overflow-y-auto">
                     {result["_source"]["date"]}
                   </td>
-                  <td className="flex-1 border-r-2 border-bc p-1">
+                  <td className="flex-1 border-r-2 border-bc p-1 overflow-y-auto">
                     {result["_source"]["location"]}
                   </td>
+                  <td className="flex-1 border-r-2 border-bc p-1 overflow-y-auto">
+                    {result["_source"]["tags"]}
+                  </td>
+                  {isAdmin &&
+                    <td className="flex-1 flex items-center justify-center align-middle flex-col">
+                      <button className="bg-black text-white py-1 px-4 rounded font-mono text-sm">Edit</button>
+                    </td>
+                  }
                 </tr>
               )
             })}
