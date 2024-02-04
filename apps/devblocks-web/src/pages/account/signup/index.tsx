@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { SyntheticEvent } from "react";
@@ -7,7 +8,8 @@ import AccountButton from "@/components/account/button";
 import AccountForm from "@/components/account/form";
 import AccountInput from "@/components/account/input";
 import AccountPasswordInput from "@/components/account/password-input";
-import routes from "@/constants/routes";
+import CONFIG from "@/constants/config";
+import ROUTES from "@/constants/routes";
 import { signUp } from "@/services/auth";
 
 export default function SignUp() {
@@ -24,8 +26,7 @@ export default function SignUp() {
     setSignupDisabled(true);
     const response = await signUp(email, password, confirmPassowrd);
 
-    // TODO: Fix this garbage
-    if (response === "User successfully created") router.push(`${routes.confirm}?username=${email}`);
+    if (response === "User successfully created") router.push(`${ROUTES.confirm}?username=${email}`);
 
     setStatus(response);
     setSignupDisabled(false);
@@ -33,6 +34,9 @@ export default function SignUp() {
 
   return (
     <main className="flex h-screen flex-row items-center justify-center align-middle">
+      <Head>
+        <title>Sign Up | {CONFIG.siteName}</title>
+      </Head>
       <AccountForm onSubmit={onSignUp}>
         {/* <button className="flex w-full max-w-lg flex-row justify-center rounded border-2 border-b-4 bg-white p-2 font-semibold outline-1 hover:brightness-95" type="button" onClick={() => signInWithGoogle()}>
           <Image className="mr-5" src={google} alt="" width={25} />
@@ -52,7 +56,7 @@ export default function SignUp() {
         <span className="mt-2 flex w-full  justify-center text-left text-sm font-semibold ">
           <span>
             Existing User?{" "}
-            <Link className="text-pc underline" href={routes.login}>
+            <Link className="text-pc underline" href={ROUTES.login}>
               Log in
             </Link>
           </span>

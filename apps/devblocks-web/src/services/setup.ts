@@ -1,8 +1,8 @@
 import { Constants, INFRA_CONFIG } from "@devblocks/models";
 import { Amplify } from "aws-amplify";
 
+import API_NAMES from "@/constants/api-names";
 import envInfo from "@root/local-env-info.json";
-import APINames from "@/constants/api_names";
 
 export const initialize = () => {
   const baseAmplifyCDKStackName: string = INFRA_CONFIG.amplifyStackConfiguration.stackName;
@@ -22,10 +22,10 @@ export const initialize = () => {
     API: {
       endpoints: [
         {
-          name: APINames.searchDocuments,
+          name: API_NAMES.searchDocuments,
           endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
-        }
-      ]
-    }
+        },
+      ],
+    },
   });
 };

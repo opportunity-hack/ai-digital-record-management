@@ -20,16 +20,16 @@ export const search = async (text: string) => {
   await createNewIndex(indexName);
 
   const query = {
-    "query": {
-      "fuzzy": {
+    query: {
+      fuzzy: {
         // Fuzzy search for the text
-        "text": {
-          "value": text,
-          "fuzziness": "AUTO"
-        }
-      }
-    }
-  }
+        text: {
+          value: text,
+          fuzziness: "AUTO",
+        },
+      },
+    },
+  };
 
   const response = await client.search({
     index: indexName,
@@ -38,7 +38,6 @@ export const search = async (text: string) => {
 
   return response.body.hits;
 };
-
 
 const createNewIndex = async (indexName: string) => {
   const indexExists = await client.indices.exists({ index: indexName });
@@ -55,8 +54,8 @@ const createNewIndex = async (indexName: string) => {
           tags: { type: "keyword" },
           bucketName: { type: "text" },
           objectKey: { type: "text" },
-        }
-      }
-    }
+        },
+      },
+    },
   });
 };

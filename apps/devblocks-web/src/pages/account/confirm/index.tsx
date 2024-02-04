@@ -6,7 +6,7 @@ import { useState } from "react";
 import AccountButton from "@/components/account/button";
 import AccountForm from "@/components/account/form";
 import AccountInput from "@/components/account/input";
-import routes from "@/constants/routes";
+import ROUTES from "@/constants/routes";
 import { confirmSignUp, resendSignUp } from "@/services/auth";
 
 export default function ConfirmUser() {
@@ -21,7 +21,7 @@ export default function ConfirmUser() {
     const email = searchParams.get("username") || "";
     const response = await confirmSignUp(email, confirmationCode);
 
-    if (response === "Success") router.push(routes.dashboard);
+    if (response === "Success") router.push(ROUTES.dashboard);
     setStatus(response);
   };
 

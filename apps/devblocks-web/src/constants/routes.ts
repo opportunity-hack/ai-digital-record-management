@@ -1,4 +1,4 @@
-const routes = {
+const ROUTES = {
   home: "/",
   dashboard: "/dashboard",
   dashboard_endpoints: "/dashboard/endpoints",
@@ -16,4 +16,4 @@ const routes = {
 
   discord: "https://discord.com/invite/5BDZNDbQ",
 };
-export default routes;
+export default ROUTES;

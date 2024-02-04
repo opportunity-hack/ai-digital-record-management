@@ -1,11 +1,11 @@
 import path from "node:path";
 
+import { Constants } from "@devblocks/models";
 import type { DocumentSearchStackConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
 import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
-import { Constants } from "@devblocks/models";
 
 export class DocumentSearchStack extends Stack {
   readonly searchDocumentEndpoint: string;
@@ -133,10 +133,10 @@ export class DocumentSearchStack extends Stack {
         allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
         allowHeaders: aws_apigateway.Cors.DEFAULT_HEADERS,
         allowMethods: aws_apigateway.Cors.ALL_METHODS,
-      }
+      },
     });
     const searchDocumentIntegration = new aws_apigateway.LambdaIntegration(searchDocumentLambda);
-    searchDocumentApi.root.addMethod("POST", searchDocumentIntegration)
+    searchDocumentApi.root.addMethod("POST", searchDocumentIntegration);
 
     const searchDocumentApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.searchDocumentDeploymentName}-${props.stage}-${props.env}`, {
       api: searchDocumentApi,
@@ -150,11 +150,11 @@ export class DocumentSearchStack extends Stack {
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
       value: props.env?.region ?? "us-east-1",
-    })
+    });
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: searchDocumentApi.url,
-    })
+    });
 
     this.searchDocumentEndpoint = searchDocumentApi.url;
   }

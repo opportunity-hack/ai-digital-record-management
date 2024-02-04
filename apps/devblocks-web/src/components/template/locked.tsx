@@ -1,12 +1,11 @@
-import routes from "@/constants/routes";
-import { LockRounded } from "@mui/icons-material"
+import { LockRounded } from "@mui/icons-material";
 import { Auth } from "aws-amplify";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-export default function withAuthenticator(page: any) {
-  const router = useRouter()
+import ROUTES from "@/constants/routes";
+
+export default function withAuthenticator(page: any, redirect: string) {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
@@ -23,16 +22,17 @@ export default function withAuthenticator(page: any) {
   };
 
   if (isSignedIn) {
-    return page
+    return page;
   }
-  else {
-    return (
-      <div className="flex flex-col items-center justify-center w-screen h-screen">
-        <LockRounded className="text-6xl" />
-        <h1 className="font-bold font-sans text-4xl">Locked</h1>
-        <h1 className="">Log in to use this page's functionalities.</h1>
-        <Link className="bg-pc text-white px-8 py-2 rounded font-semibold mt-2" href={`${routes.login}?redirect=${router.route}`}>Login</Link>
-      </div>
-    );
-  }
+
+  return (
+    <div className="flex h-screen w-screen flex-col items-center justify-center">
+      <LockRounded className="text-6xl" />
+      <h1 className="font-sans text-4xl font-bold">Locked</h1>
+      <h1 className="">Log in to use this page's functionalities.</h1>
+      <Link className="mt-2 rounded bg-pc px-8 py-2 font-semibold text-white" href={`${ROUTES.login}?redirect=${redirect}`}>
+        Login
+      </Link>
+    </div>
+  );
 }

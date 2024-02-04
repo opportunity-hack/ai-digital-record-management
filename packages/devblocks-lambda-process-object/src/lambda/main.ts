@@ -10,8 +10,8 @@ export const handler = async (event: S3Event, _: any = {}) => {
   const result = await extractTextFromObject(bucketName, objectKey);
   const index = await indexText(bucketName, objectKey, result);
 
-  console.log(result)
-  console.log(index)
+  console.log(result);
+  console.log(index);
 
   return index;
 };
