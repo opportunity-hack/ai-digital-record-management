@@ -35,5 +35,12 @@ export const INFRA_CONFIG: StageConfiguration = {
     searchDocumentDeploymentName: `${ENVIRONMENT_NAME}-search-document-deployment`,
     searchDocumentStageName: `${ENVIRONMENT_NAME}-search-document-stage`,
     searchDocumentLogsName: `${ENVIRONMENT_NAME}-search-document-logs`,
+
+    storeTextTextractLambdaName: `${ENVIRONMENT_NAME}-store-text-textract-lambda`,
+    storeTextTranscribeLambdaName: `${ENVIRONMENT_NAME}-store-text-transcribe-lambda`,
+    storeTagsRekognitionLambdaName: `${ENVIRONMENT_NAME}-store-tags-rekognition-lambda`,
+    storeTextTextractTopicName: `${ENVIRONMENT_NAME}-store-text-textract-topic`,
+    storeTextTranscribeTopicName: `${ENVIRONMENT_NAME}-store-text-transcribe-topic`,
+    storeTagsRekognitionTopicName: `${ENVIRONMENT_NAME}-store-tags-rekognition-topic`,
   },
 };

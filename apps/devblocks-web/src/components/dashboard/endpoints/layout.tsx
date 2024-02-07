@@ -10,9 +10,9 @@ export default function DashboardKeysLayout({ children }: { children?: React.Rea
           <SearchRoundedIcon className="mr-2" />
           <div className="flex flex-col">
             SEARCH
-            <text className="font-sans font-semibold">
-              Search for documents by entering text into the search bar below and then clicking on <text className="rounded bg-pc p-1 px-2 font-mono text-sm text-white">SEARCH!</text>.
-            </text>
+            <span className="font-sans font-semibold">
+              Search for documents by entering text into the search bar below and then clicking on <span className="rounded bg-pc p-1 px-2 font-mono text-sm text-white">SEARCH!</span>.
+            </span>
           </div>
         </span>
         <div className="mb-8 flex w-full flex-1 flex-row space-x-4 pt-4">

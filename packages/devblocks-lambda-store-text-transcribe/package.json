@@ -1,5 +1,5 @@
 {
-  "name": "@devblocks/devblocks-lambda-bulk-upload",
+  "name": "@devblocks/devblocks-store-text-transcribe",
   "version": "1.0.0",
   "description": "This sub-package represents a consumer Lambda function, used for processing documents.",
   "main": "lib/index.js",
@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.338.0",
+    "@aws-sdk/client-rekognition": "^3.507.0",
     "@aws-sdk/client-textract": "^3.496.0",
+    "@aws-sdk/credential-provider-node": "^3.504.0",
     "@aws-sdk/types": "^3.272.0",
     "@aws-sdk/util-dynamodb": "^3.284.0",
     "@devblocks/models": "1.0.0",

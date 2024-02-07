@@ -11,7 +11,7 @@ export const initialize = () => {
   // The comment below turns off ESLint just for this line.
   // eslint-disable-next-line global-require, import/no-dynamic-require
   const cdkExport = require(`@root/exports/cdk-exports-${envInfo.envName}.json`);
-  console.log(cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "")]);
+  console.log(cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "")]);
   Amplify.configure({
     Auth: {
       identityPoolId: cdkExport[baseAmplifyCDKStackName][Constants.AmplifyConstants.COGNITO_IDENTITY_POOL_ID.replaceAll("_", "")],
@@ -26,6 +26,12 @@ export const initialize = () => {
           endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
         },
       ],
+    },
+    Storage: {
+      S3: {
+        bucket: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME.replaceAll("_", "")]}`,
+        region: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "")]}`,
+      }
     },
   });
 };

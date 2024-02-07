@@ -4,14 +4,14 @@ const { AwsSigv4Signer } = require("@opensearch-project/opensearch/aws");
 
 const client = new Client({
   ...AwsSigv4Signer({
-    region: process.env.REGION || "us-east-1",
+    region: process.env.REGION ?? "us-east-1",
     service: "es",
     getCredentials: () => {
       const credentialsProvider = defaultProvider();
       return credentialsProvider();
     },
   }),
-  node: `https://${process.env.OPENSEARCH_ENDPOINT}` || "", // OpenSearch domain URL
+  node: `https://${process.env.OPENSEARCH_ENDPOINT}` ?? "", // OpenSearch domain URL
 });
 
 const createNewIndex = async (indexName: string) => {
@@ -35,27 +35,15 @@ const createNewIndex = async (indexName: string) => {
   });
 };
 
-export const indexText = async (bucketName: string, objectKey: string, text: string, tags: Array<string>) => {
+export const deleteText = async (bucketName: string, objectKey: string) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
 
   const id = `${bucketName}-${objectKey}`;
-
-  const document = {
-    text: `${text}\n\n${tags.join(" ")}`,
-    date: null,
-    location: null,
-    tags,
-    bucketName,
-    objectKey,
-  };
-
-  const response = await client.index({
+  const response = await client.delete({
     id,
     index: indexName,
-    body: document,
-    refresh: true,
   });
 
   return response;

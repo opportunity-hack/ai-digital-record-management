@@ -36,7 +36,7 @@ export default function Dashboard() {
           body={
             <div>
               This website&apos;s search functionality is located by clicking on the tab &apos;Search&apos; on the navbar on the left.
-              <Image className="my-4 rounded border-2 border-black" src={searchTabInstructions} />
+              <Image className="my-4 rounded border-2 border-black" src={searchTabInstructions} alt="Search Tab Instructions" />
               There, the users would be able to search for files using various fields such as the text, location or date.
             </div>
           }

@@ -1,17 +1,19 @@
 {
   "opportunity-document-search-stack": {
-    "ExportsOutputRefopportunitysearchdocumentapidevobjectObjectE222641DCC61DE6D": "rswaq5vnzd",
-    "opportunitysearchdocumentapidevobjectObjectEndpoint667C85DA": "https://rswaq5vnzd.execute-api.us-west-2.amazonaws.com/prod/",
     "searchdocumentapiendpointregion": "us-west-2",
-    "ExportsOutputRefopportunitysearchdocumentapidevobjectObjectDeploymentStageprod4899E3B9BAF2BE50": "prod",
-    "searchdocumentapiendpoint": "https://rswaq5vnzd.execute-api.us-west-2.amazonaws.com/prod/"
+    "opportunitysearchdocumentapidevuswest2EndpointD3CB2577": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
+    "ExportsOutputRefopportunitysearchdocumentapidevuswest2DeploymentStageprod2F0774EF2684E5EF": "prod",
+    "ExportsOutputRefopportunitysearchdocumentapidevuswest254583836AE058BAB": "r0wdtio91j",
+    "documentbucketname": "opportunity-bucket-storage",
+    "searchdocumentapiendpoint": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
+    "documentbucketregion": "us-west-2"
   },
   "opportunity-amplify-stack": {
-    "awsuserpoolsid": "us-west-2_pH8to8Uv0",
-    "amplifyappid": "d320ljmbi6cw99",
+    "awsuserpoolsid": "us-west-2_Ohmd6HjQT",
+    "amplifyappid": "d3k1lbax9be058",
     "awsprojectregion": "us-west-2",
     "awscognitoregion": "us-west-2",
-    "awsuserpoolswebclientid": "17bgfla1sei2v310pdg7lnj6om",
-    "awscognitoidentitypoolid": "us-west-2:16b2be0b-6bd5-45de-abd4-f3f0742fa614"
+    "awsuserpoolswebclientid": "1l5b843s0uiaciqe6nhula0665",
+    "awscognitoidentitypoolid": "us-west-2:b9e1b4ad-65b3-4d00-95c4-7d6b2644cc78"
   }
 }

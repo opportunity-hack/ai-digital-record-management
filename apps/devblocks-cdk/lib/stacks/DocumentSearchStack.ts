@@ -25,15 +25,22 @@ export class DocumentSearchStack extends Stack {
       bucketName: props.documentSearchStackConfiguration.documentStorageBucketName,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      eventBridgeEnabled: true,
+      eventBridgeEnabled: true
     });
+
+    documentStorageBucket.addCorsRule({
+      allowedOrigins: ['http://localhost:3000', '*'],
+      allowedMethods: [aws_s3.HttpMethods.GET, aws_s3.HttpMethods.POST, aws_s3.HttpMethods.HEAD, aws_s3.HttpMethods.PUT, aws_s3.HttpMethods.DELETE],
+      allowedHeaders: ['*'],
+      maxAge: 3600
+    })
 
     const documentStorageBucketObjectCreatedSource = new aws_lambda_event_sources.S3EventSource(documentStorageBucket, {
       events: [aws_s3.EventType.OBJECT_CREATED],
       filters: [{ prefix: "public/" }],
     });
 
-    const documentSearchIndex = new aws_opensearchservice.Domain(this, `${props.documentSearchStackConfiguration.documentSearchIndexName}-${props.stage}-${props.env}`, {
+    const documentSearchIndex = new aws_opensearchservice.Domain(this, `${props.documentSearchStackConfiguration.documentSearchIndexName}-${props.stage}-${props.env?.region}`, {
       version: aws_opensearchservice.EngineVersion.OPENSEARCH_1_3,
       zoneAwareness: {
         enabled: false,
@@ -45,10 +52,11 @@ export class DocumentSearchStack extends Stack {
       tlsSecurityPolicy: aws_opensearchservice.TLSSecurityPolicy.TLS_1_2,
     });
 
+    // Attach Textract policy to the aws_iam role
     // ====================================================================================================
     // Lambda function for processing documents
     // ====================================================================================================
-    const processDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.processDocumentLambdaName}-${props.stage}-${props.env}`, {
+    const processDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.processDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
       functionName: `${props.documentSearchStackConfiguration.processDocumentLambdaName}-${props.stage}`,
       entry: path.join(__dirname, "../../../../packages/devblocks-lambda-process-object/src/lambda/main.ts"),
       runtime: aws_lambda.Runtime.NODEJS_18_X,
@@ -66,7 +74,7 @@ export class DocumentSearchStack extends Stack {
       environment: {
         REGION: props.env?.region ?? "us-east-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
-        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() || "",
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
     });
     processDocumentLambda.addEventSource(documentStorageBucketObjectCreatedSource);
@@ -75,6 +83,13 @@ export class DocumentSearchStack extends Stack {
       new PolicyStatement({
         effect: aws_iam.Effect.ALLOW,
         actions: ["textract:DetectDocumentText"],
+        resources: ["*"],
+      }),
+    );
+    processDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["rekognition:*"],
         resources: ["*"],
       }),
     );
@@ -94,9 +109,61 @@ export class DocumentSearchStack extends Stack {
     );
 
     // ====================================================================================================
+    // Lambda function for deleting documents
+    // ====================================================================================================
+    const documentStorageBucketObjectDeletedSource = new aws_lambda_event_sources.S3EventSource(documentStorageBucket, {
+      events: [aws_s3.EventType.OBJECT_REMOVED],
+      filters: [{ prefix: "public/" }],
+    })
+    const deleteDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.deleteDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
+      functionName: `${props.documentSearchStackConfiguration.deleteDocumentLambdaName}-${props.stage}`,
+      entry: path.join(__dirname, "../../../../packages/devblocks-lambda-delete-object/src/lambda/main.ts"),
+      runtime: aws_lambda.Runtime.NODEJS_18_X,
+
+      // We add a timeout here different from the default of 3 seconds, since we expect these API calls to take longer
+      timeout: Duration.minutes(15),
+      memorySize: 1024,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        sourceMapMode: aws_lambda_nodejs.SourceMapMode.BOTH,
+        sourcesContent: false,
+        target: "esnext",
+      },
+      environment: {
+        REGION: props.env?.region ?? "us-east-1",
+        OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
+      },
+    });
+    deleteDocumentLambda.addEventSource(documentStorageBucketObjectDeletedSource);
+    documentStorageBucket.grantReadWrite(deleteDocumentLambda);
+    deleteDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["textract:DetectDocumentText"],
+        resources: ["*"],
+      }),
+    );
+    deleteDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["s3:ReadObject"],
+        resources: [`${documentStorageBucket.bucketArn}/*`],
+      }),
+    );
+    deleteDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["es:*"],
+        resources: ["*"],
+      }),
+    );
+
+    // ====================================================================================================
     // Lambda function for searching documents
     // ====================================================================================================
-    const searchDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.searchDocumentLambdaName}-${props.stage}-${props.env}`, {
+    const searchDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.searchDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
       functionName: `${props.documentSearchStackConfiguration.searchDocumentLambdaName}`,
       entry: path.join(__dirname, "../../../../packages/devblocks-lambda-search-object/src/lambda/main.ts"),
       runtime: aws_lambda.Runtime.NODEJS_18_X,
@@ -125,7 +192,7 @@ export class DocumentSearchStack extends Stack {
       }),
     );
 
-    const searchDocumentApi = new aws_apigateway.LambdaRestApi(this, `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}-${props.env}`, {
+    const searchDocumentApi = new aws_apigateway.LambdaRestApi(this, `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}-${props.env?.region}`, {
       restApiName: `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}`,
       handler: searchDocumentLambda,
       proxy: false,
@@ -138,11 +205,11 @@ export class DocumentSearchStack extends Stack {
     const searchDocumentIntegration = new aws_apigateway.LambdaIntegration(searchDocumentLambda);
     searchDocumentApi.root.addMethod("POST", searchDocumentIntegration);
 
-    const searchDocumentApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.searchDocumentDeploymentName}-${props.stage}-${props.env}`, {
+    const searchDocumentApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.searchDocumentDeploymentName}-${props.stage}-${props.env?.region}`, {
       api: searchDocumentApi,
     });
 
-    new aws_apigateway.Stage(this, `${props.documentSearchStackConfiguration.searchDocumentStageName}-${props.stage}-${props.env}`, {
+    new aws_apigateway.Stage(this, `${props.documentSearchStackConfiguration.searchDocumentStageName}-${props.stage}-${props.env?.region}`, {
       stageName: `${props.documentSearchStackConfiguration.searchDocumentStageName}-${props.stage}`,
       deployment: searchDocumentApiDeployment,
     });
@@ -154,6 +221,15 @@ export class DocumentSearchStack extends Stack {
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: searchDocumentApi.url,
+    });
+
+    new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION, {
+      exportName: Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "-"),
+      value: props.env?.region ?? "us-east-1",
+    });
+    new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME, {
+      exportName: Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME.replaceAll("_", "-"),
+      value: documentStorageBucket.bucketName,
     });
 
     this.searchDocumentEndpoint = searchDocumentApi.url;
