@@ -31,7 +31,7 @@ export const initialize = () => {
       S3: {
         bucket: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME.replaceAll("_", "")]}`,
         region: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "")]}`,
-      }
+      },
     },
   });
 };

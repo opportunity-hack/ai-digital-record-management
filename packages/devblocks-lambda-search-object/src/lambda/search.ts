@@ -14,6 +14,27 @@ const client = new Client({
   node: `https://${process.env.OPENSEARCH_ENDPOINT}`, // OpenSearch domain URL
 });
 
+const createNewIndex = async (indexName: string): Promise<any> => {
+  const indexExists = await client.indices.exists({ index: indexName });
+  if (indexExists.statusCode === 200) return;
+
+  return await client.indices.create({
+    index: indexName,
+    body: {
+      mappings: {
+        properties: {
+          text: { type: "text" },
+          date: { type: "date" },
+          location: { type: "geo_point" },
+          tags: { type: "keyword" },
+          bucketName: { type: "text" },
+          objectKey: { type: "text" },
+        },
+      },
+    },
+  });
+};
+
 export const search = async (text: string) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
@@ -37,25 +58,4 @@ export const search = async (text: string) => {
   });
 
   return response.body.hits;
-};
-
-const createNewIndex = async (indexName: string) => {
-  const indexExists = await client.indices.exists({ index: indexName });
-  if (indexExists.statusCode === 200) return;
-
-  return await client.indices.create({
-    index: indexName,
-    body: {
-      mappings: {
-        properties: {
-          text: { type: "text" },
-          date: { type: "date" },
-          location: { type: "geo_point" },
-          tags: { type: "keyword" },
-          bucketName: { type: "text" },
-          objectKey: { type: "text" },
-        },
-      },
-    },
-  });
 };

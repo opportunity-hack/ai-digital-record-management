@@ -35,7 +35,7 @@ const createNewIndex = async (indexName: string) => {
   });
 };
 
-export const indexText = async (bucketName: string, objectKey: string, text: string, tags: Array<string>) => {
+export const indexText = async (bucketName: string, objectKey: string, text: string) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
@@ -43,10 +43,10 @@ export const indexText = async (bucketName: string, objectKey: string, text: str
   const id = `${bucketName}-${objectKey}`;
 
   const document = {
-    text: `${text}\n\n${tags.join(" ")}`,
+    text: `${text}\n\n`,
     date: null,
     location: null,
-    tags,
+    tags: null,
     bucketName,
     objectKey,
   };

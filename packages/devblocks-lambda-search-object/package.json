@@ -12,6 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.338.0",
     "@aws-sdk/client-textract": "^3.496.0",
+    "@aws-sdk/credential-provider-node": "^3.509.0",
     "@aws-sdk/types": "^3.272.0",
     "@aws-sdk/util-dynamodb": "^3.284.0",
     "@devblocks/models": "1.0.0",

@@ -2,8 +2,16 @@ import { type APIGatewayEvent } from "aws-lambda";
 
 import { search } from "./search";
 
+const parseBody = (body: string) => {
+  try {
+    return JSON.parse(body);
+  } catch (error) {
+    return null;
+  }
+};
+
 export const handler = async (event: APIGatewayEvent, _: any = {}) => {
-  const parsedBody = parseBody(event.body);
+  const parsedBody = parseBody(event.body ?? "");
   if (!parsedBody) {
     return {
       statusCode: 400,
@@ -28,12 +36,4 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
     }),
   };
   return response;
-};
-
-const parseBody = (body: string | null) => {
-  try {
-    return JSON.parse(body);
-  } catch (error) {
-    return null;
-  }
 };

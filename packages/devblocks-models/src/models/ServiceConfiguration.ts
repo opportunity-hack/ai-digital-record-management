@@ -33,6 +33,8 @@ export interface DocumentSearchStackConfiguration {
   readonly storeTextTranscribeTopicName: string;
   readonly storeTagsRekognitionTopicName: string;
 
+  readonly updateOpensearchLambdaName: string;
+
   readonly processDocumentLambdaName: string;
   readonly processDocumentStateMachineName: string;
   readonly objectCreatedEventRuleName: string;

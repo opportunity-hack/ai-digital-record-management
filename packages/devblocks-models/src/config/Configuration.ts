@@ -36,6 +36,8 @@ export const INFRA_CONFIG: StageConfiguration = {
     searchDocumentStageName: `${ENVIRONMENT_NAME}-search-document-stage`,
     searchDocumentLogsName: `${ENVIRONMENT_NAME}-search-document-logs`,
 
+    updateOpensearchLambdaName: `${ENVIRONMENT_NAME}-update-opensearch-lambda`,
+
     storeTextTextractLambdaName: `${ENVIRONMENT_NAME}-store-text-textract-lambda`,
     storeTextTranscribeLambdaName: `${ENVIRONMENT_NAME}-store-text-transcribe-lambda`,
     storeTagsRekognitionLambdaName: `${ENVIRONMENT_NAME}-store-tags-rekognition-lambda`,

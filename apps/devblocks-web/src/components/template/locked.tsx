@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { LockRounded } from "@mui/icons-material";
 import { Auth } from "aws-amplify";
 import Link from "next/link";

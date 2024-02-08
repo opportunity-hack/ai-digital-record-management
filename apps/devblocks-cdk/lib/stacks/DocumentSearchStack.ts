@@ -25,15 +25,15 @@ export class DocumentSearchStack extends Stack {
       bucketName: props.documentSearchStackConfiguration.documentStorageBucketName,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      eventBridgeEnabled: true
+      eventBridgeEnabled: true,
     });
 
     documentStorageBucket.addCorsRule({
-      allowedOrigins: ['http://localhost:3000', '*'],
+      allowedOrigins: ["http://localhost:3000", "*"],
       allowedMethods: [aws_s3.HttpMethods.GET, aws_s3.HttpMethods.POST, aws_s3.HttpMethods.HEAD, aws_s3.HttpMethods.PUT, aws_s3.HttpMethods.DELETE],
-      allowedHeaders: ['*'],
-      maxAge: 3600
-    })
+      allowedHeaders: ["*"],
+      maxAge: 3600,
+    });
 
     const documentStorageBucketObjectCreatedSource = new aws_lambda_event_sources.S3EventSource(documentStorageBucket, {
       events: [aws_s3.EventType.OBJECT_CREATED],
@@ -107,6 +107,56 @@ export class DocumentSearchStack extends Stack {
         resources: ["*"],
       }),
     );
+    processDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["transcribe:*"],
+        resources: ["*"],
+      }),
+    );
+
+    const documentStorageBucketTranscriptionCreatedSource = new aws_lambda_event_sources.S3EventSource(documentStorageBucket, {
+      events: [aws_s3.EventType.OBJECT_CREATED],
+      filters: [{ prefix: "transcription/", suffix: ".json" }],
+    });
+
+    const updateOpensearchLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.updateOpensearchLambdaName}-${props.stage}-${props.env?.region}`, {
+      functionName: `${props.documentSearchStackConfiguration.updateOpensearchLambdaName}-${props.stage}`,
+      entry: path.join(__dirname, "../../../../packages/devblocks-lambda-store-text-transcribe/src/lambda/main.ts"),
+      runtime: aws_lambda.Runtime.NODEJS_18_X,
+
+      // We add a timeout here different from the default of 3 seconds, since we expect these API calls to take longer
+      timeout: Duration.minutes(15),
+      memorySize: 1024,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        sourceMapMode: aws_lambda_nodejs.SourceMapMode.BOTH,
+        sourcesContent: false,
+        target: "esnext",
+      },
+      environment: {
+        REGION: props.env?.region ?? "us-east-1",
+        OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
+      },
+    });
+    updateOpensearchLambda.addEventSource(documentStorageBucketTranscriptionCreatedSource);
+    documentStorageBucket.grantReadWrite(updateOpensearchLambda);
+    updateOpensearchLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["s3:ReadObject"],
+        resources: [`${documentStorageBucket.bucketArn}/*`],
+      }),
+    );
+    updateOpensearchLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["es:*"],
+        resources: ["*"],
+      }),
+    );
 
     // ====================================================================================================
     // Lambda function for deleting documents
@@ -114,7 +164,7 @@ export class DocumentSearchStack extends Stack {
     const documentStorageBucketObjectDeletedSource = new aws_lambda_event_sources.S3EventSource(documentStorageBucket, {
       events: [aws_s3.EventType.OBJECT_REMOVED],
       filters: [{ prefix: "public/" }],
-    })
+    });
     const deleteDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.deleteDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
       functionName: `${props.documentSearchStackConfiguration.deleteDocumentLambdaName}-${props.stage}`,
       entry: path.join(__dirname, "../../../../packages/devblocks-lambda-delete-object/src/lambda/main.ts"),

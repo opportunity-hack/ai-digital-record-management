@@ -1,5 +1,5 @@
 {
-  "name": "@devblocks/devblocks-store-text-transcribe",
+  "name": "@devblocks/devblocks-lambda-store-text-transcribe",
   "version": "1.0.0",
   "description": "This sub-package represents a consumer Lambda function, used for processing documents.",
   "main": "lib/index.js",

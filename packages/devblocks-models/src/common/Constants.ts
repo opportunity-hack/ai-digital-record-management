@@ -22,6 +22,6 @@ export namespace Constants {
     export const SEARCH_DOCUMENT_API_ENDPOINT_REGION: string = "search_document_api_endpoint_region";
 
     export const DOCUMENT_BUCKET_REGION: string = "document_bucket_region";
-    export const DOCUMENT_BUCKET_NAME: string = "document_bucket_name"; 
+    export const DOCUMENT_BUCKET_NAME: string = "document_bucket_name";
   }
 }

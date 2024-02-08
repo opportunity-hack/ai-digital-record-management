@@ -44,28 +44,29 @@ export default function DashboardKeys() {
 
   function downloadBlob(blob: any, filename: string) {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = filename || 'download';
+    a.download = filename || "download";
     const clickHandler = () => {
       setTimeout(() => {
         URL.revokeObjectURL(url);
-        a.removeEventListener('click', clickHandler);
+        a.removeEventListener("click", clickHandler);
       }, 150);
     };
-    a.addEventListener('click', clickHandler, false);
+    a.addEventListener("click", clickHandler, false);
     a.click();
     return a;
   }
 
   // usage
   async function download(objectKey: string) {
-
     try {
       const result = await Storage.get(objectKey, { download: true, region: "us-west-2", expires: 3600 });
-      console.log(result)
+      console.log(result);
       downloadBlob(result.Body, objectKey);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return withAuthenticator(
@@ -137,19 +138,19 @@ export default function DashboardKeys() {
                     {isAdmin && (
                       <button className="rounded bg-black px-4 py-1 text-white" type="button">
                         Edit
-                      </button>)}
-                    < button className="rounded bg-black px-4 py-1 text-white" type="button" onClick={() => download(result._source.objectKey)}>
+                      </button>
+                    )}
+                    <button className="rounded bg-black px-4 py-1 text-white" type="button" onClick={() => download(result._source.objectKey)}>
                       Download
                     </button>
                   </td>
-
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-    </DashboardKeysLayout >,
+    </DashboardKeysLayout>,
     router.pathname,
   );
 }

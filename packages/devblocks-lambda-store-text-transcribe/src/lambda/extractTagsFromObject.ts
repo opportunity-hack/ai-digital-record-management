@@ -1,4 +1,4 @@
-import { DetectLabelsCommand, RekognitionClient, StartLabelDetectionCommand } from "@aws-sdk/client-rekognition";
+import { DetectLabelsCommand, RekognitionClient } from "@aws-sdk/client-rekognition";
 
 const client = new RekognitionClient({ region: process.env.REGION || "us-east-1" });
 
@@ -17,7 +17,7 @@ export const extractTagsFromObject = async (bucketName: string, objectKey: strin
           },
         },
       });
-      const response = (await client.send(command)).Labels?.flatMap((label) => [...label.Aliases.map((alias) => alias.Name), label.Name]);
+      const response = (await client.send(command)).Labels?.flatMap((label: any) => [...label.Aliases.map((alias) => alias.Name), label.Name]);
       return response;
     }
     case "mp4":

@@ -1,5 +1,5 @@
 import type { DetectDocumentTextCommandInput } from "@aws-sdk/client-textract";
-import { DetectDocumentTextCommand, TextractClient, StartDocumentTextDetectionCommand } from "@aws-sdk/client-textract";
+import { DetectDocumentTextCommand, StartDocumentTextDetectionCommand, TextractClient } from "@aws-sdk/client-textract";
 
 const combineBlockText = async (blocks: any) => {
   let text = "";
@@ -27,11 +27,10 @@ export const extractTextFromDocument = async (bucketName: string, objectKey: str
     NotificationChannel: {
       RoleArn: process.env.STORE_TEXT_TEXTRACT_ROLE_ARN,
       SNSTopicArn: process.env.STORE_TEXT_TEXTRACT_TOPIC_ARN,
-    }
-  }
+    },
+  };
   const testcommand = new StartDocumentTextDetectionCommand(testinput);
   console.log("StartDocumentTextDetectionCommand", testcommand);
-
 
   const input: DetectDocumentTextCommandInput = {
     Document: {
