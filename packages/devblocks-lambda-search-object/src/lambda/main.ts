@@ -24,7 +24,7 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
   console.log(parsedBody);
   console.log(parsedBody.text);
 
-  const searchResults = await search(parsedBody.text, parsedBody.location, parsedBody.date);
+  const searchResults = await search(parsedBody.text, parsedBody.location, parsedBody.date, parsedBody.tags);
   const response = {
     statusCode: 200,
     headers: {

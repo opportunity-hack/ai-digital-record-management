@@ -43,7 +43,7 @@ export const editObject = async (bucketName: string, objectKey: string, text: st
   const id = `${bucketName}-${objectKey}`;
 
   const document = {
-    text: `${text}\n\n${tags.join(" ")}`,
+    text: `${text}`,
     date,
     location,
     tags,

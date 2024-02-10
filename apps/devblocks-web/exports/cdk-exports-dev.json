@@ -1,22 +1,22 @@
 {
   "opportunity-document-search-stack": {
-    "opportunityeditdocumentapidevuswest2Endpoint27FA55EC": "https://d068c4l0ek.execute-api.us-west-2.amazonaws.com/prod/",
+    "opportunityeditdocumentapidevuswest2Endpoint27FA55EC": "https://pt513l7yu3.execute-api.us-west-2.amazonaws.com/prod/",
     "searchdocumentapiendpointregion": "us-west-2",
     "editdocumentapiendpointregion": "us-west-2",
-    "opportunitysearchdocumentapidevuswest2EndpointD3CB2577": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
+    "opportunitysearchdocumentapidevuswest2EndpointD3CB2577": "https://9pu66xk7ed.execute-api.us-west-2.amazonaws.com/prod/",
     "ExportsOutputRefopportunitysearchdocumentapidevuswest2DeploymentStageprod2F0774EF2684E5EF": "prod",
-    "ExportsOutputRefopportunitysearchdocumentapidevuswest254583836AE058BAB": "r0wdtio91j",
+    "ExportsOutputRefopportunitysearchdocumentapidevuswest254583836AE058BAB": "9pu66xk7ed",
     "documentbucketname": "opportunity-bucket-storage",
-    "searchdocumentapiendpoint": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
-    "editdocumentapiendpoint": "https://d068c4l0ek.execute-api.us-west-2.amazonaws.com/prod/",
+    "searchdocumentapiendpoint": "https://9pu66xk7ed.execute-api.us-west-2.amazonaws.com/prod/",
+    "editdocumentapiendpoint": "https://pt513l7yu3.execute-api.us-west-2.amazonaws.com/prod/",
     "documentbucketregion": "us-west-2"
   },
   "opportunity-amplify-stack": {
-    "awsuserpoolsid": "us-west-2_Ohmd6HjQT",
-    "amplifyappid": "d3k1lbax9be058",
+    "awsuserpoolsid": "us-west-2_ZyxHpPEQQ",
+    "amplifyappid": "d30w0j4k6uziu0",
     "awsprojectregion": "us-west-2",
     "awscognitoregion": "us-west-2",
-    "awsuserpoolswebclientid": "1l5b843s0uiaciqe6nhula0665",
-    "awscognitoidentitypoolid": "us-west-2:b9e1b4ad-65b3-4d00-95c4-7d6b2644cc78"
+    "awsuserpoolswebclientid": "11f2ddlac2nkk3jrkh70i8ik4c",
+    "awscognitoidentitypoolid": "us-west-2:2201a3d6-8b2c-46d4-94f7-4c15bc2ad33b"
   }
 }

@@ -35,7 +35,7 @@ const createNewIndex = async (indexName: string): Promise<any> => {
   });
 };
 
-export const search = async (text: string, location: string, date: Date) => {
+export const search = async (text: string, location: string, date: Date, tags: Array<string>) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
@@ -72,12 +72,21 @@ export const search = async (text: string, location: string, date: Date) => {
       },
     });
   }
+
   if (date) {
     must.push({
       range: {
         date: {
           eq: date,
         },
+      },
+    });
+  }
+
+  if (tags) {
+    must.push({
+      terms: {
+        tags,
       },
     });
   }
