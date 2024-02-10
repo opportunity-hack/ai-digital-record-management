@@ -1,11 +1,14 @@
 {
   "opportunity-document-search-stack": {
+    "opportunityeditdocumentapidevuswest2Endpoint27FA55EC": "https://d068c4l0ek.execute-api.us-west-2.amazonaws.com/prod/",
     "searchdocumentapiendpointregion": "us-west-2",
+    "editdocumentapiendpointregion": "us-west-2",
     "opportunitysearchdocumentapidevuswest2EndpointD3CB2577": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
     "ExportsOutputRefopportunitysearchdocumentapidevuswest2DeploymentStageprod2F0774EF2684E5EF": "prod",
     "ExportsOutputRefopportunitysearchdocumentapidevuswest254583836AE058BAB": "r0wdtio91j",
     "documentbucketname": "opportunity-bucket-storage",
     "searchdocumentapiendpoint": "https://r0wdtio91j.execute-api.us-west-2.amazonaws.com/prod/",
+    "editdocumentapiendpoint": "https://d068c4l0ek.execute-api.us-west-2.amazonaws.com/prod/",
     "documentbucketregion": "us-west-2"
   },
   "opportunity-amplify-stack": {

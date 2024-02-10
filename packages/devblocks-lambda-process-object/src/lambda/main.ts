@@ -11,7 +11,7 @@ export const handler = async (event: S3Event, _: any = {}) => {
   console.log(bucketName);
   console.log(objectKey);
 
-  const tags = await extractTagsFromObject(bucketName, objectKey) as string[];
+  const tags = (await extractTagsFromObject(bucketName, objectKey)) as string[];
   const text = await extractTextFromObject(bucketName, objectKey);
   const index = await indexText(bucketName, objectKey, text, tags);
 

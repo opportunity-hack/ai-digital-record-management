@@ -1,6 +1,6 @@
 import { type APIGatewayEvent } from "aws-lambda";
 
-import { search } from "./search";
+import { editObject } from "./editObject";
 
 const parseBody = (body: string) => {
   try {
@@ -23,8 +23,9 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
 
   console.log(parsedBody);
   console.log(parsedBody.text);
+  console.log(parsedBody.location);
 
-  const searchResults = await search(parsedBody.text, parsedBody.location, parsedBody.date);
+  const editResults = await editObject(parsedBody.bucketName, parsedBody.objectKey, parsedBody.text, parsedBody.location, parsedBody.date, parsedBody.tags);
   const response = {
     statusCode: 200,
     headers: {
@@ -32,7 +33,7 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
       "Access-Control-Allow-Headers": "*",
     },
     body: JSON.stringify({
-      message: searchResults,
+      message: editResults,
     }),
   };
   return response;

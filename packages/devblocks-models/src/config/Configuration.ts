@@ -38,6 +38,13 @@ export const INFRA_CONFIG: StageConfiguration = {
 
     updateOpensearchLambdaName: `${ENVIRONMENT_NAME}-update-opensearch-lambda`,
 
+    editDocumentLambdaName: `${ENVIRONMENT_NAME}-edit-document-lambda`,
+    editDocumentApiName: `${ENVIRONMENT_NAME}-edit-document-api`,
+    editDocumentDeploymentName: `${ENVIRONMENT_NAME}-edit-document-deployment`,
+    editDocumentStageName: `${ENVIRONMENT_NAME}-edit-document-stage`,
+
+    locationServiceName: `${ENVIRONMENT_NAME}-location-service`,
+
     storeTextTextractLambdaName: `${ENVIRONMENT_NAME}-store-text-textract-lambda`,
     storeTextTranscribeLambdaName: `${ENVIRONMENT_NAME}-store-text-transcribe-lambda`,
     storeTagsRekognitionLambdaName: `${ENVIRONMENT_NAME}-store-tags-rekognition-lambda`,

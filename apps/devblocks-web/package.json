@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rimraf /.next && next build",
     "start": "next start",
     "lint": "next lint --fix",
     "clean": "rimraf .next/ node_modules/"
@@ -28,8 +28,10 @@
     "aws-amplify": "^5.3.11",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
     "next": "13.5.4",
     "react": "^18",
+    "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "react-tabs": "^6.0.2",
     "tailwind-merge": "^2.2.1",

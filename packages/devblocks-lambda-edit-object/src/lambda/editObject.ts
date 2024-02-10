@@ -4,17 +4,17 @@ const { AwsSigv4Signer } = require("@opensearch-project/opensearch/aws");
 
 const client = new Client({
   ...AwsSigv4Signer({
-    region: process.env.REGION ?? "us-east-1",
+    region: process.env.REGION || "us-east-1",
     service: "es",
     getCredentials: () => {
       const credentialsProvider = defaultProvider();
       return credentialsProvider();
     },
   }),
-  node: `https://${process.env.OPENSEARCH_ENDPOINT}`, // OpenSearch domain URL
+  node: `https://${process.env.OPENSEARCH_ENDPOINT}` || "", // OpenSearch domain URL
 });
 
-const createNewIndex = async (indexName: string): Promise<any> => {
+const createNewIndex = async (indexName: string) => {
   const indexExists = await client.indices.exists({ index: indexName });
   if (indexExists.statusCode === 200) return;
 
@@ -35,65 +35,28 @@ const createNewIndex = async (indexName: string): Promise<any> => {
   });
 };
 
-export const search = async (text: string, location: string, date: Date) => {
+export const editObject = async (bucketName: string, objectKey: string, text: string | null, location: string | null, date: string | null, tags: Array<string>) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
 
-  // const query = {
-  //   query: {
-  //     fuzzy: {
-  //       // Fuzzy search for the text
-  //       text: {
-  //         value: text,
-  //         fuzziness: "AUTO",
-  //       },
-  //     },
-  //   },
-  // };
+  const id = `${bucketName}-${objectKey}`;
 
-  const must: Array<any> = [];
-
-  if (text) {
-    must.push({
-      fuzzy: {
-        text: {
-          value: text,
-          fuzziness: "AUTO",
-        },
-      },
-    });
-  }
-  if (location) {
-    must.push({
-      geo_distance: {
-        distance: "200km",
-        location,
-      },
-    });
-  }
-  if (date) {
-    must.push({
-      range: {
-        date: {
-          eq: date,
-        },
-      },
-    });
-  }
-
-  const query = {
-    query: {
-      bool: {
-        must,
-      },
-    },
+  const document = {
+    text: `${text}\n\n${tags.join(" ")}`,
+    date,
+    location,
+    tags,
+    bucketName,
+    objectKey,
   };
 
-  const response = await client.search({
+  const response = await client.index({
+    id,
     index: indexName,
-    body: query,
+    body: document,
+    refresh: true,
   });
 
-  return response.body.hits;
+  return response;
 };

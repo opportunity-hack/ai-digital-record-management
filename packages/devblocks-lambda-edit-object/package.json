@@ -1,5 +1,5 @@
 {
-  "name": "@devblocks/devblocks-lambda-process-object",
+  "name": "@devblocks/devblocks-lambda-edit-object",
   "version": "1.0.0",
   "description": "This sub-package represents a consumer Lambda function, used for processing documents.",
   "main": "lib/index.js",
@@ -9,19 +9,14 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.338.0",
-    "@aws-sdk/client-rekognition": "^3.507.0",
     "@aws-sdk/client-textract": "^3.496.0",
-    "@aws-sdk/client-transcribe": "^3.507.0",
-    "@aws-sdk/credential-provider-node": "^3.504.0",
+    "@aws-sdk/credential-provider-node": "^3.509.0",
     "@aws-sdk/types": "^3.272.0",
     "@aws-sdk/util-dynamodb": "^3.284.0",
     "@devblocks/models": "1.0.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "aws-sdk": "^2.1545.0",
-    "axios": "^1.4.0",
-    "docxtemplater": "^3.44.0",
-    "jszip": "^3.10.1",
-    "mammoth": "^1.6.0"
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@devblocks/tsconfig": "1.0.0",

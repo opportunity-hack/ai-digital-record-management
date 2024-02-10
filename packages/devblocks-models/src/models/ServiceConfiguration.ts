@@ -39,5 +39,12 @@ export interface DocumentSearchStackConfiguration {
   readonly processDocumentStateMachineName: string;
   readonly objectCreatedEventRuleName: string;
 
+  readonly editDocumentLambdaName: string;
+  readonly editDocumentApiName: string;
+  readonly editDocumentDeploymentName: string;
+  readonly editDocumentStageName: string;
+
+  readonly locationServiceName: string;
+
   readonly documentSearchIndexName: string;
 }

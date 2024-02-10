@@ -3,7 +3,7 @@ import path from "node:path";
 import { Constants } from "@devblocks/models";
 import type { DocumentSearchStackConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
-import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_location, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
 
@@ -264,6 +264,73 @@ export class DocumentSearchStack extends Stack {
       deployment: searchDocumentApiDeployment,
     });
 
+    // ====================================================================================================
+    // Lambda function for searching documents
+    // ====================================================================================================
+    const locationService = new aws_location.CfnPlaceIndex(this, `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}-${props.env?.region}`, {
+      dataSource: "Esri",
+      indexName: `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}`,
+    });
+
+    const editDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.editDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
+      functionName: `${props.documentSearchStackConfiguration.editDocumentLambdaName}`,
+      entry: path.join(__dirname, "../../../../packages/devblocks-lambda-edit-object/src/lambda/main.ts"),
+      runtime: aws_lambda.Runtime.NODEJS_18_X,
+
+      // We add a timeout here different from the default of 3 seconds, since we expect these API calls to take longer
+      timeout: Duration.minutes(15),
+      memorySize: 2048,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        sourceMapMode: aws_lambda_nodejs.SourceMapMode.BOTH,
+        sourcesContent: false,
+        target: "esnext",
+      },
+      environment: {
+        REGION: props.env?.region ?? "us-east-1",
+        OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
+        LOCATION_INDEX_NAME: locationService.indexName,
+      },
+    });
+    editDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["es:*"],
+        resources: ["*"],
+      }),
+    );
+    editDocumentLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["geo:*"],
+        resources: ["*"],
+      }),
+    );
+
+    const editDocumentApi = new aws_apigateway.LambdaRestApi(this, `${props.documentSearchStackConfiguration.editDocumentApiName}-${props.stage}-${props.env?.region}`, {
+      restApiName: `${props.documentSearchStackConfiguration.editDocumentApiName}-${props.stage}`,
+      handler: editDocumentLambda,
+      proxy: false,
+      defaultCorsPreflightOptions: {
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+        allowHeaders: aws_apigateway.Cors.DEFAULT_HEADERS,
+        allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      },
+    });
+    const editDocumentIntegration = new aws_apigateway.LambdaIntegration(editDocumentLambda);
+    editDocumentApi.root.addMethod("POST", editDocumentIntegration);
+
+    const editDocumentApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.editDocumentDeploymentName}-${props.stage}-${props.env?.region}`, {
+      api: editDocumentApi,
+    });
+
+    new aws_apigateway.Stage(this, `${props.documentSearchStackConfiguration.editDocumentStageName}-${props.stage}-${props.env?.region}`, {
+      stageName: `${props.documentSearchStackConfiguration.editDocumentStageName}-${props.stage}`,
+      deployment: editDocumentApiDeployment,
+    });
+
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
       value: props.env?.region ?? "us-east-1",
@@ -271,6 +338,15 @@ export class DocumentSearchStack extends Stack {
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: searchDocumentApi.url,
+    });
+
+    new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT_REGION, {
+      exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
+      value: props.env?.region ?? "us-east-1",
+    });
+    new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT, {
+      exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
+      value: editDocumentApi.url,
     });
 
     new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION, {

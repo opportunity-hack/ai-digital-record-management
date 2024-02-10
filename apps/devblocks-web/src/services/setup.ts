@@ -25,6 +25,10 @@ export const initialize = () => {
           name: API_NAMES.searchDocuments,
           endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
         },
+        {
+          name: API_NAMES.editDocument,
+          endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
+        }
       ],
     },
     Storage: {

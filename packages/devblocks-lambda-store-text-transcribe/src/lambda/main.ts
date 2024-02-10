@@ -12,7 +12,7 @@ export const handler = async (event: S3Event, _: any = {}) => {
     Bucket: bucketName,
     Key: objectKey,
   };
-  const response = await s3.getObject(params).promise() as { Body: Buffer };
+  const response = (await s3.getObject(params).promise()) as { Body: Buffer };
   const text = JSON.parse(response.Body.toString("utf-8")).results.transcripts[0].transcript;
 
   const index = await indexText(bucketName, objectKey.slice(0, -5).slice(14), text);
