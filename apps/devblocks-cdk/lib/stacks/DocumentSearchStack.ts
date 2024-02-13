@@ -1,11 +1,15 @@
 import path from "node:path";
 
+import * as iam from 'aws-cdk-lib/aws-iam'
 import { Constants } from "@devblocks/models";
 import type { DocumentSearchStackConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
 import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_location, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 
 export class DocumentSearchStack extends Stack {
   readonly searchDocumentEndpoint: string;
@@ -156,6 +160,42 @@ export class DocumentSearchStack extends Stack {
         actions: ["es:*"],
         resources: ["*"],
       }),
+    );
+
+    // ====================================================================================================
+    // Lambda function for processing .zip file 
+    // ====================================================================================================
+    const processZipFiles = new lambda.Function(this, "document-search-process-zip-files", {
+      runtime: lambda.Runtime.PYTHON_3_10,
+      code: lambda.Code.fromAsset("lambda"),
+      handler: "bulkprocessing.handler",
+      timeout: Duration.minutes(15),
+      environment: {
+        "BUCKET_NAME": documentStorageBucket.bucketName
+      },
+      memorySize: 1024
+    })
+
+    documentStorageBucket.grantReadWrite(processZipFiles);
+
+    processZipFiles.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "logs:*",
+          "apigateway:*",
+          "s3:*"
+        ],
+        resources: ["*"],
+      })
+    )
+
+    // adding trigger to the lambda function from s3 trigger 
+    documentStorageBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3n.LambdaDestination(processZipFiles),{
+      suffix: '.zip'
+      }
     );
 
     // ====================================================================================================
