@@ -3,19 +3,19 @@
 import { CalendarMonth, Close, CloseRounded, Edit, EditNote, List, LocationOn, Tag, Title } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import { API, Auth, Storage } from "aws-amplify";
+import { format, set } from "date-fns";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { DayPicker } from 'react-day-picker';
-import { format, set } from 'date-fns';
+import { DayPicker } from "react-day-picker";
 
 import Spinner from "@/components/common/loading-spinner";
+import Accordion from "@/components/dashboard/accordion";
 import DashboardKeysLayout from "@/components/dashboard/endpoints/layout";
+import TagInput from "@/components/dashboard/endpoints/tag-input";
 import withAuthenticator from "@/components/template/locked";
 import API_NAMES from "@/constants/api-names";
 import CONFIG from "@/constants/config";
-import TagInput from "@/components/dashboard/endpoints/tag-input";
-import Accordion from "@/components/dashboard/accordion";
 
 export default function DashboardKeys() {
   const router = useRouter();
@@ -27,13 +27,12 @@ export default function DashboardKeys() {
   const [modalActive, setModalActive] = useState(false);
   const [editId, setEditId] = useState("");
   const [editText, setEditText] = useState("");
-  const [editDate, setEditDate] = useState(null);
+  const [editDate, setEditDate] = useState<Date | undefined>(undefined);
   const [editTags, setEditTags] = useState([]);
   const [editBucket, setEditBucket] = useState("");
   const [editObjectKey, setEditObjectKey] = useState("");
-  const [editInProgress, setEditInProgress] = useState(false)
+  const [editInProgress, setEditInProgress] = useState(false);
   const [dateIsFocused, setDateIsFocused] = useState(false);
-
 
   const [advancedDate, setAdvancedDate] = useState(null);
   const [advancedTags, setAdvancedTags] = useState([]);
@@ -43,11 +42,15 @@ export default function DashboardKeys() {
   console.log(editText);
   let footer = <p>Please pick a day.</p>;
   if (editDate) {
-    footer = <p>You picked {format(editDate, 'PP')}.</p>;
+    footer = <p>You picked {format(editDate, "PP")}.</p>;
   }
 
   const onSearch = async (event: any) => {
-    try { event.preventDefault(); } catch (error) { }
+    try {
+      event.preventDefault();
+    } catch (error) {
+      console.error(error);
+    }
     setIsSearching(true);
     try {
       const apiResults = (
@@ -107,23 +110,23 @@ export default function DashboardKeys() {
     }
   }
 
-  const handleBlur = (event) => {
+  const handleBlur = (event: any) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
       setDateIsFocused(false);
     }
-  }
+  };
   const handleFocus = () => {
     setDateIsFocused(true);
-  }
+  };
 
-  const handleAdvancedBlur = (event) => {
+  const handleAdvancedBlur = (event: any) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
       setAdvancedDateIsFocused(false);
     }
-  }
+  };
 
   const editDocument = async () => {
-    setEditInProgress(true)
+    setEditInProgress(true);
     try {
       const result = await API.post(API_NAMES.editDocument, "", {
         headers: {
@@ -136,18 +139,18 @@ export default function DashboardKeys() {
           bucketName: editBucket,
           objectKey: editObjectKey,
         },
-      })
-      setEditInProgress(false)
-      onSearch()
+      });
+      setEditInProgress(false);
+      onSearch(null);
       console.log(result);
     } catch (e) {
       console.error(e);
     }
-  }
+  };
 
   const accordionClick = () => {
     setAdvancedIsActive(!advancedIsActive);
-  }
+  };
 
   return withAuthenticator(
     <DashboardKeysLayout>
@@ -194,7 +197,6 @@ export default function DashboardKeys() {
           <button className="mt-8 flex h-12 w-full max-w-full items-center justify-center rounded border-0 border-none bg-pc font-mono text-sm font-semibold text-white outline-none outline-0" type="submit" disabled={isSearching}>
             {isSearching ? <Spinner /> : "SEARCH!"}
           </button>
-
         </form>
         <table className="mt-4 flex flex-col -space-y-1">
           <tbody className="shadow-box max-h-[calc(50vh)] flex-1 overflow-y-auto">
@@ -278,25 +280,18 @@ export default function DashboardKeys() {
             </label>
             <label className="mt-2" htmlFor="date" onFocus={handleFocus} onBlur={handleBlur}>
               <div>Date</div>
-              <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="date" readOnly value={editDate ? format(editDate, 'MM/dd/yy') : ""} />
-              {dateIsFocused && <DayPicker
-                className="left-0 absolute color-black bg-white p-2 shadow-box"
-                mode="single"
-                selected={editDate}
-                onSelect={setEditDate}
-                footer={footer}
-                showOutsideDays
-                fixedWeeks />}
+              <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="date" readOnly value={editDate ? format(editDate, "MM/dd/yy") : ""} />
+              {dateIsFocused && <DayPicker className="color-black shadow-box absolute left-0 bg-white p-2" mode="single" selected={editDate} onSelect={setEditDate} footer={footer} showOutsideDays fixedWeeks />}
             </label>
             {/* <label className="mt-2" htmlFor="location">
               <div>Location</div>
               <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="location" />
             </label> */}
-            <label className="mt-2" htmlFor="tags">
+            <div className="mt-2">
               <div>Tags</div>
               <TagInput tags={editTags} setTags={setEditTags} />
-            </label>
-            <button className="flex items-center justify-center h-10 mt-4 rounded bg-pc p-2 font-mono font-semibold text-white" type="button" onClick={editDocument}>
+            </div>
+            <button className="mt-4 flex h-10 items-center justify-center rounded bg-pc p-2 font-mono font-semibold text-white" type="button" onClick={editDocument}>
               {editInProgress ? <Spinner /> : "SUBMIT"}
             </button>
           </div>

@@ -6,7 +6,14 @@ export default function Accordion({ title, body, className, startActive, onClick
   const [active, setActive] = useState<boolean>(startActive);
   return (
     <div className={`cursor-pointer ${className}`}>
-      <button className="mb-2 flex flex-row items-center space-x-4 font-mono text-sm font-bold" onClick={() => { setActive(!active); onClick() }} type="button">
+      <button
+        className="mb-2 flex flex-row items-center space-x-4 font-mono text-sm font-bold"
+        onClick={() => {
+          setActive(!active);
+          onClick();
+        }}
+        type="button"
+      >
         {active ? <RemoveIcon /> : <AddIcon />}
         <span>{title}</span>
       </button>
