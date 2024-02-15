@@ -1,1 +1,29 @@
-{}
+{
+  "opportunity-document-search-stack": {
+    "searchdocumentapiendpointregion": "",
+    "editdocumentapiendpointregion": "",
+    "dpreservesearchgetobjectpreSignedURLAPIputEndpoint08E7B0E4": "",
+    "opportunitysearchdocumentapidevuswest1Endpoint85608450": "",
+    "ExportsOutputRefopportunitysearchdocumentapidevuswest1764444D95C1DA20A": "",
+    "editdocumentapiendpoint": "",
+    "documentbucketregion": "",
+    "opportunityeditdocumentapidevuswest1EndpointBE33DB85": "",
+    "getpresignedurl": "",
+    "dpreservesearchgetobjectpreSignedURLAPIEndpointC43B43B3": "",
+    "ExportsOutputRefopportunitysearchdocumentapidevuswest1DeploymentStageprodC9D263E2B39C24D8": "",
+    "documentbucketname": "",
+    "getpresignedurlput": "",
+    "searchdocumentapiendpoint": ""
+  },
+  "opportunity-nextjs-ssg-hosting-stack": {
+    "StaticWebsiteHostingStackDomainName": ""
+  },
+  "opportunity-amplify-stack": {
+    "awsuserpoolsid": "",
+    "amplifyappid": "",
+    "awsprojectregion": "",
+    "awscognitoregion": "",
+    "awsuserpoolswebclientid": "",
+    "awscognitoidentitypoolid": ""
+  }
+}
