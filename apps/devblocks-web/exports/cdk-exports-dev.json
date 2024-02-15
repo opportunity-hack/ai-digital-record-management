@@ -15,6 +15,9 @@
     "getpresignedurlput": "https://l9vl2lzx0b.execute-api.us-west-1.amazonaws.com/prod/",
     "searchdocumentapiendpoint": "https://eacjvcxpl9.execute-api.us-west-1.amazonaws.com/prod/"
   },
+  "stupidfuck-nextjs-ssg-hosting-stack": {
+    "StaticWebsiteHostingStackDomainName": "d2vyvfbj8j7snn.cloudfront.net"
+  },
   "stupidfuck-amplify-stack": {
     "awsuserpoolsid": "us-west-1_ezNArH9Pd",
     "amplifyappid": "d2wj7powwhx4zq",

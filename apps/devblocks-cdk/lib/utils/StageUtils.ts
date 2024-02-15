@@ -3,6 +3,8 @@ import type { App, Environment } from "aws-cdk-lib";
 
 import { AmplifyStack } from "../stacks/AmplifyStack";
 import { DocumentSearchStack } from "../stacks/DocumentSearchStack";
+import path from "path";
+import { StaticWebsiteHostingStack } from "../stacks/StaticWebsiteHostingStack";
 
 export class StageUtils {
   private readonly configuration: StageConfiguration;
@@ -34,5 +36,15 @@ export class StageUtils {
       searchDocumentEndpoint: documentSearchStack.searchDocumentEndpoint,
     });
     amplifyStack.addDependency(documentSearchStack);
+
+    
+    new StaticWebsiteHostingStack(this.app, this.configuration.staticWebsiteHostingStackConfiguration.stackName, {
+      stackName: this.configuration.staticWebsiteHostingStackConfiguration.stackName,
+      env: this.env,
+      stage: this.stage,
+      staticWebsiteHostingStackConfiguration: this.configuration.staticWebsiteHostingStackConfiguration,
+      staticAssetsFilePath: path.resolve(__dirname, "../../../../apps/devblocks-web/out"),
+      cfnOutputName: "StaticWebsiteHostingStackDomainName",
+    });
   };
 }

@@ -21,6 +21,8 @@ import CONFIG from "@/constants/config";
 export default function DashboardKeys() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
@@ -59,7 +61,11 @@ export default function DashboardKeys() {
   }
 
   async function upload(e: any) {
+    setMessage("");
+    setLoading(true);
     if (!file) {
+      setMessage("You must select a file to upload");
+      setLoading(false);
       return;
     }
     try {
@@ -75,10 +81,13 @@ export default function DashboardKeys() {
         })
       console.log(result)
       uploadFile(result['url'], result['fields'])
+      setMessage("File uploaded successfully");
       // await Storage.put(`zip/${file?.name}`, file, { contentType: "application/zip" });
     } catch (error) {
       console.log("Error uploading file: ", error);
+      setMessage("Error uploading file");
     }
+    setLoading(false);
   }
 
   return withAuthenticator(
@@ -89,7 +98,7 @@ export default function DashboardKeys() {
           <div className="flex flex-col">
             Upload
             <span className="flex flex-row font-sans font-semibold">
-              Upload documents here by dropping <div className="mx-2 rounded bg-pc px-2 text-white">.zip</div> files into the space below
+              Upload documents here by clicking on the space below. This only accepts <div className="mx-2 rounded bg-pc px-2 text-white">.zip</div> files.
             </span>
           </div>
         </span>
@@ -111,14 +120,15 @@ export default function DashboardKeys() {
               ) : (
                 <>
                   <UploadFile className="text-7xl" />
-                  <div className="text-xl">Drop files here</div>
+                  <div className="text-xl cursor-pointer">Click here to upload files</div>
                 </>
               )}
             </label>
           </div>
-          <button className="font-xl w-full rounded-sm bg-pc py-2 text-white " type="button" onClick={upload}>
-            Upload
+          <button className="font-xl w-full rounded-sm bg-pc h-10 items-center justify-center flex py-2 text-white " type="button" onClick={upload}>
+            {loading? <Spinner/>: "Upload"}
           </button>
+          <div className="text-sm font-bold text-red w-full text-center">{message}</div>
         </div>
       </div>
     </DashboardLayout>,

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import DashboardItem from "@/components/dashboard/item";
 import ROUTES from "@/constants/routes";
 import { signOut } from "@/services/auth";
+import { Upload } from "@mui/icons-material";
 
 export default function DashboardNavbar() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function DashboardNavbar() {
 
         {/* If the user is an admin, then show them the following */}
         <hr className="" />
-        <DashboardItem Icon={SearchIcon} title="Upload" href={ROUTES.dashboard_upload} depth={3} />
+        <DashboardItem Icon={Upload} title="Upload" href={ROUTES.dashboard_upload} depth={3} />
       </span>
       <span className="space-y-4">
         {/* <DashboardItem Icon={SettingsRoundedIcon} title="Settings" href={routes.docs} depth={3} /> */}
