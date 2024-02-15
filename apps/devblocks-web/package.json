@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "rimraf /.next && next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "",
     "clean": "rimraf .next/ node_modules/"
   },
   "dependencies": {

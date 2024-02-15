@@ -2,6 +2,7 @@ const ROUTES = {
   home: "/",
   dashboard: "/dashboard",
   dashboard_endpoints: "/dashboard/endpoints",
+  dashboard_upload: "/dashboard/upload",
 
   dashboard_endpoints_overview: "/dashboard/endpoints/overview",
   dashboard_endpoints_api: "/dashboard/endpoints/api",

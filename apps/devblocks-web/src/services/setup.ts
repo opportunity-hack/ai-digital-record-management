@@ -1,5 +1,5 @@
 import { Constants, INFRA_CONFIG } from "@devblocks/models";
-import { Amplify } from "aws-amplify";
+import { Amplify, Storage } from "aws-amplify";
 
 import API_NAMES from "@/constants/api-names";
 import envInfo from "@root/local-env-info.json";
@@ -29,6 +29,10 @@ export const initialize = () => {
           name: API_NAMES.editDocument,
           endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
         },
+        {
+          name: API_NAMES.getPresigned,
+          endpoint: cdkExport[documentSearchCDKStackName].getpresignedurl,
+        },
       ],
     },
     Storage: {
@@ -38,4 +42,10 @@ export const initialize = () => {
       },
     },
   });
+
+  // Storage.configure({
+  //   bucket: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME.replaceAll("_", "")]}`,
+  //   region: `${cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "")]}`,
+  //   identityPoolId: cdkExport[baseAmplifyCDKStackName][Constants.AmplifyConstants.COGNITO_IDENTITY_POOL_ID.replaceAll("_", "")],
+  // });
 };

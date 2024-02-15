@@ -1,15 +1,15 @@
 import path from "node:path";
 
-import * as iam from 'aws-cdk-lib/aws-iam'
 import { Constants } from "@devblocks/models";
 import type { DocumentSearchStackConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
-import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_location, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { aws_apigateway, aws_iam, aws_lambda, aws_lambda_event_sources, aws_lambda_nodejs, aws_logs, aws_opensearchservice, aws_s3, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import * as iam from "aws-cdk-lib/aws-iam";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
-import type { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as s3n from "aws-cdk-lib/aws-s3-notifications";
+import type { Construct } from "constructs";
 
 export class DocumentSearchStack extends Stack {
   readonly searchDocumentEndpoint: string;
@@ -25,7 +25,7 @@ export class DocumentSearchStack extends Stack {
     super(scope, id, props);
 
     // S3 Storage bucket where all documents will be stored.
-    const documentStorageBucket = new aws_s3.Bucket(this, props.documentSearchStackConfiguration.documentStorageBucketName, {
+    const documentStorageBucket = new aws_s3.Bucket(this, `${props.documentSearchStackConfiguration.documentStorageBucketName}-12323`, {
       bucketName: props.documentSearchStackConfiguration.documentStorageBucketName,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -76,7 +76,7 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region ?? "us-east-1",
+        REGION: props.env?.region ?? "us-west-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
@@ -140,7 +140,7 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region ?? "us-east-1",
+        REGION: props.env?.region ?? "us-west-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
@@ -163,40 +163,34 @@ export class DocumentSearchStack extends Stack {
     );
 
     // ====================================================================================================
-    // Lambda function for processing .zip file 
+    // Lambda function for processing .zip file
     // ====================================================================================================
     const processZipFiles = new lambda.Function(this, "document-search-process-zip-files", {
       runtime: lambda.Runtime.PYTHON_3_10,
-      code: lambda.Code.fromAsset("lambda"),
+      code: lambda.Code.fromAsset("../../packages/dev-blocks-bulk-upload/lambda"),
       handler: "bulkprocessing.handler",
       timeout: Duration.minutes(15),
       environment: {
-        "BUCKET_NAME": documentStorageBucket.bucketName
+        BUCKET_NAME: documentStorageBucket.bucketName,
       },
-      memorySize: 1024
-    })
+      memorySize: 1024,
+    });
 
     documentStorageBucket.grantReadWrite(processZipFiles);
 
     processZipFiles.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          "logs:*",
-          "apigateway:*",
-          "s3:*"
-        ],
+        actions: ["logs:*", "apigateway:*", "s3:*"],
         resources: ["*"],
-      })
-    )
-
-    // adding trigger to the lambda function from s3 trigger 
-    documentStorageBucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
-      new s3n.LambdaDestination(processZipFiles),{
-      suffix: '.zip'
-      }
+      }),
     );
+
+    // adding trigger to the lambda function from s3 trigger
+    documentStorageBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(processZipFiles), {
+      suffix: ".zip",
+      prefix: "zip",
+    });
 
     // ====================================================================================================
     // Lambda function for deleting documents
@@ -221,7 +215,7 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region ?? "us-east-1",
+        REGION: props.env?.region ?? "us-west-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
@@ -269,7 +263,7 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region ?? "us-east-1",
+        REGION: props.env?.region ?? "us-west-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
       },
@@ -307,10 +301,10 @@ export class DocumentSearchStack extends Stack {
     // ====================================================================================================
     // Lambda function for searching documents
     // ====================================================================================================
-    const locationService = new aws_location.CfnPlaceIndex(this, `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}-${props.env?.region}`, {
-      dataSource: "Esri",
-      indexName: `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}`,
-    });
+    // const locationService = new aws_location.CfnPlaceIndex(this, `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}-${props.env?.region}`, {
+    //   dataSource: "Esri",
+    //   indexName: `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}`,
+    // });
 
     const editDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.editDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
       functionName: `${props.documentSearchStackConfiguration.editDocumentLambdaName}`,
@@ -328,10 +322,10 @@ export class DocumentSearchStack extends Stack {
         target: "esnext",
       },
       environment: {
-        REGION: props.env?.region ?? "us-east-1",
+        REGION: props.env?.region ?? "us-west-1",
         OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
         OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
-        LOCATION_INDEX_NAME: locationService.indexName,
+        // LOCATION_INDEX_NAME: locationService.indexName,
       },
     });
     editDocumentLambda.addToRolePolicy(
@@ -371,9 +365,55 @@ export class DocumentSearchStack extends Stack {
       deployment: editDocumentApiDeployment,
     });
 
+    // Lambda function to upload data to S3 bucket uasing presigned URL from the Backup bucket
+    const preserve_search_upload_presigned_url = new lambda.Function(this, "preserve_search_get_object_presignedURL", {
+      runtime: lambda.Runtime.PYTHON_3_10,
+      code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
+      handler: "getSignedURL.handler",
+      environment: {
+        BUCKET_NAME: documentStorageBucket.bucketName,
+      },
+    });
+
+    preserve_search_upload_presigned_url.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["logs:*", "apigateway:*", "s3:*", "dynamodb:*"],
+        resources: ["*"],
+      }),
+    );
+
+    // API to get the presigned URL
+    const get_preSignedURL_API = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API", {
+      cloudWatchRole: true,
+      deployOptions: {
+        accessLogDestination: new aws_apigateway.LogGroupLogDestination(
+          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group", {
+            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group",
+            retention: aws_logs.RetentionDays.ONE_MONTH,
+            removalPolicy: RemovalPolicy.DESTROY,
+          }),
+        ),
+      },
+      defaultCorsPreflightOptions: {
+        allowHeaders: ["*"],
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+        allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      },
+    });
+
+    // get_presigned_URL integration
+    const get_preSignedURL_integration = new aws_apigateway.LambdaIntegration(preserve_search_upload_presigned_url);
+
+    // declaring the resource and then adding method
+    const get_preSignedURL_api_path = get_preSignedURL_API.root.addResource("getSignedObjectUrl");
+
+    // adding post method
+    get_preSignedURL_api_path.addMethod("POST", get_preSignedURL_integration);
+
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
-      value: props.env?.region ?? "us-east-1",
+      value: props.env?.region ?? "us-west-1",
     });
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
@@ -382,8 +422,14 @@ export class DocumentSearchStack extends Stack {
 
     new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
-      value: props.env?.region ?? "us-east-1",
+      value: props.env?.region ?? "us-west-1",
     });
+
+    new CfnOutput(this, "getpresignedurl", {
+      exportName: "getpresignedurl",
+      value: get_preSignedURL_API.url,
+    });
+
     new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: editDocumentApi.url,
@@ -391,7 +437,7 @@ export class DocumentSearchStack extends Stack {
 
     new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION, {
       exportName: Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "-"),
-      value: props.env?.region ?? "us-east-1",
+      value: props.env?.region ?? "us-west-1",
     });
     new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME, {
       exportName: Constants.DocumentSearchConstants.DOCUMENT_BUCKET_NAME.replaceAll("_", "-"),

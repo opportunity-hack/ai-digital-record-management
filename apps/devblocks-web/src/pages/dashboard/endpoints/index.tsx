@@ -34,7 +34,7 @@ export default function DashboardKeys() {
   const [editInProgress, setEditInProgress] = useState(false);
   const [dateIsFocused, setDateIsFocused] = useState(false);
 
-  const [advancedDate, setAdvancedDate] = useState(null);
+  const [advancedDate, setAdvancedDate] = useState<Date | undefined>(undefined);
   const [advancedTags, setAdvancedTags] = useState([]);
   const [advancedIsActive, setAdvancedIsActive] = useState(false);
   const [advancedDateIsFocused, setAdvancedDateIsFocused] = useState(false);
@@ -60,8 +60,8 @@ export default function DashboardKeys() {
           },
           body: {
             text: searchText,
-            date: advancedIsActive && advancedDate,
-            tags: advancedIsActive && advancedTags,
+            date: advancedIsActive && advancedDate && format(advancedDate, "MM/dd/yy").toString(),
+            tags: advancedIsActive && advancedTags.toString(),
           },
         })
       ).message.hits;
@@ -102,7 +102,8 @@ export default function DashboardKeys() {
   // usage
   async function download(objectKey: string) {
     try {
-      const result = await Storage.get(objectKey, { download: true, region: "us-west-2", expires: 3600 });
+      // const result = await API.post(API_NAMES.getPresigned, "getSignedObjectUrl", { key: objectKey })
+      const result = await Storage.get(objectKey, { download: true, region: "us-west-1", expires: 3600 });
       console.log(result);
       downloadBlob(result.Body, objectKey);
     } catch (e) {
@@ -134,8 +135,8 @@ export default function DashboardKeys() {
         },
         body: {
           text: editText,
-          date: editDate,
-          tags: editTags,
+          date: editDate ? format(editDate, "MM/dd/yy").toString() : null,
+          // tags: editTags,
           bucketName: editBucket,
           objectKey: editObjectKey,
         },
@@ -166,33 +167,41 @@ export default function DashboardKeys() {
               {isSearching ? <Spinner /> : "SEARCH!"}
             </button>
           </div>
-          {/* <Accordion onClick={accordionClick} className="shadow-box pl-4 pr-4 pt-4 pb-2 justify-center flex flex-col " body={
-            <div className="flex flex-row w-full space-x-2">
-              <label className="flex-1" htmlFor="date" onFocus={()=>setAdvancedDateIsFocused(true)} onBlur={handleAdvancedBlur}>
-                <div>Date</div>
-                <div className="flex-row flex w-full rounded-sm border-2 border-bc p-2 outline-none">
-                  <input className="outline-none flex-1" name="date" readOnly value={advancedDate ? format(advancedDate, 'MM/dd/yy') : ""} />
-                  {advancedDate && <button type="button" onClick={() => {setAdvancedDate(null); setAdvancedDateIsFocused(false)}}><CloseRounded /></button>}
-                </div>
-                {advancedDateIsFocused && <DayPicker
-                  className="absolute color-black bg-white p-2 shadow-box"
-                  mode="single"
-                  selected={advancedDate}
-                  onSelect={setAdvancedDate}
-                  footer={footer}
-                  showOutsideDays
-                  fixedWeeks />}
-              </label>
-              {/* <label className="mt-2" htmlFor="location">
-              <div>Location</div>
-              <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="location" />
-            </label> 
-              <label className="flex-1" htmlFor="tags">
-                <div>Tags</div>
-                <TagInput tags={advancedTags} setTags={setAdvancedTags} />
-              </label>
-
-            </div>} title="Advanced Search Options" /> */}
+          <Accordion
+            onClick={accordionClick}
+            className="shadow-box flex flex-col justify-center px-4 pb-2 pt-4"
+            body={
+              <div className="flex w-full flex-row space-x-2">
+                <label className="flex-1" htmlFor="date" onFocus={() => setAdvancedDateIsFocused(true)} onBlur={handleAdvancedBlur}>
+                  <div>Date</div>
+                  <div className="flex w-full flex-row rounded-sm border-2 border-bc p-2 outline-none">
+                    <input className="flex-1 outline-none" name="date" readOnly value={advancedDate ? format(advancedDate, "MM/dd/yy").toString() : ""} />
+                    {advancedDate && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAdvancedDate(undefined);
+                          setAdvancedDateIsFocused(false);
+                        }}
+                      >
+                        <CloseRounded />
+                      </button>
+                    )}
+                  </div>
+                  {advancedDateIsFocused && <DayPicker className="color-black shadow-box absolute bg-white p-2" mode="single" selected={advancedDate} onSelect={setAdvancedDate} footer={footer} showOutsideDays fixedWeeks />}
+                </label>
+                {/* <label className="mt-2" htmlFor="location">
+                <div>Location</div>
+                <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="location" />
+              </label> */}
+                <label className="flex-1" htmlFor="tags">
+                  <div>Tags</div>
+                  <TagInput tags={advancedTags} setTags={setAdvancedTags} />
+                </label>
+              </div>
+            }
+            title="Advanced Search Options"
+          />
 
           <button className="mt-8 flex h-12 w-full max-w-full items-center justify-center rounded border-0 border-none bg-pc font-mono text-sm font-semibold text-white outline-none outline-0" type="submit" disabled={isSearching}>
             {isSearching ? <Spinner /> : "SEARCH!"}

@@ -1,7 +1,7 @@
 import { APP_NAME } from "@devblocks/models";
 import type { AmplifyAuthConfiguration } from "@devblocks/models/src/models/ServiceConfiguration";
 import type { StackProps } from "aws-cdk-lib";
-import { Duration, NestedStack } from "aws-cdk-lib";
+import { aws_iam, Duration, NestedStack } from "aws-cdk-lib";
 import { AccountRecovery, CfnIdentityPool, CfnIdentityPoolRoleAttachment, UserPool, UserPoolClient, VerificationEmailStyle } from "aws-cdk-lib/aws-cognito";
 import { FederatedPrincipal, Role } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
@@ -87,6 +87,14 @@ export class AmplifyAuthStack extends NestedStack {
       ),
       maxSessionDuration: Duration.hours(1),
     });
+
+    // Add ability to add and read from buckets
+    this.authenticatedRole.addToPolicy(
+      new aws_iam.PolicyStatement({
+        actions: ["s3:*"],
+        resources: ["*"],
+      }),
+    );
 
     this.unauthenticatedRole = new Role(this, `${props.amplifyAuthConfiguration.unauthenticatedRoleName}`, {
       roleName: `${props.amplifyAuthConfiguration.unauthenticatedRoleName}`,

@@ -26,7 +26,7 @@ const createNewIndex = async (indexName: string) => {
           text: { type: "text" },
           date: { type: "date" },
           location: { type: "geo_point" },
-          tags: { type: "keyword" },
+          tags: { type: "text" },
           bucketName: { type: "text" },
           objectKey: { type: "text" },
         },

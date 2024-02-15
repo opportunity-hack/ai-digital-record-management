@@ -23,6 +23,7 @@ export default function DashboardNavbar() {
 
         {/* If the user is an admin, then show them the following */}
         <hr className="" />
+        <DashboardItem Icon={SearchIcon} title="Upload" href={ROUTES.dashboard_upload} depth={3} />
       </span>
       <span className="space-y-4">
         {/* <DashboardItem Icon={SettingsRoundedIcon} title="Settings" href={routes.docs} depth={3} /> */}

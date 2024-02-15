@@ -24,9 +24,9 @@ const createNewIndex = async (indexName: string): Promise<any> => {
       mappings: {
         properties: {
           text: { type: "text" },
-          date: { type: "date" },
+          date: { type: "text" },
           location: { type: "geo_point" },
-          tags: { type: "keyword" },
+          tags: { type: "text" },
           bucketName: { type: "text" },
           objectKey: { type: "text" },
         },
@@ -54,7 +54,7 @@ export const search = async (text: string, location: string, date: Date, tags: A
 
   const must: Array<any> = [];
 
-  if (text) {
+  if (text && text.length > 0) {
     must.push({
       fuzzy: {
         text: {
@@ -75,18 +75,18 @@ export const search = async (text: string, location: string, date: Date, tags: A
 
   if (date) {
     must.push({
-      range: {
+      match: {
         date: {
-          eq: date,
+          query: date,
         },
       },
     });
   }
 
-  if (tags) {
+  if (tags && tags.length > 0) {
     must.push({
       terms: {
-        tags,
+        tags: text,
       },
     });
   }
@@ -94,10 +94,12 @@ export const search = async (text: string, location: string, date: Date, tags: A
   const query = {
     query: {
       bool: {
-        must,
+        should: must,
       },
     },
   };
+
+  console.log(must);
 
   const response = await client.search({
     index: indexName,

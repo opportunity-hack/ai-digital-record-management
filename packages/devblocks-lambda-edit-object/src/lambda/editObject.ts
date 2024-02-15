@@ -24,9 +24,9 @@ const createNewIndex = async (indexName: string) => {
       mappings: {
         properties: {
           text: { type: "text" },
-          date: { type: "date" },
+          date: { type: "text" },
           location: { type: "geo_point" },
-          tags: { type: "keyword" },
+          tags: { type: "text" },
           bucketName: { type: "text" },
           objectKey: { type: "text" },
         },
