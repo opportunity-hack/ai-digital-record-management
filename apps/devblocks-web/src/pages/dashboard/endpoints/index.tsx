@@ -83,6 +83,30 @@ export default function DashboardKeys() {
     setEditObjectKey(row._source.objectKey);
   };
 
+  async function downloadUrl(url: any, filename: string) {
+    try {
+      if (url) {
+        // Use fetch to download the file using the pre-signed URL
+        const fileResponse = await fetch(url, {
+          // headers: {
+          //   Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+          // },
+        });
+        const blob = await fileResponse.blob();
+
+        // Create a temporary link element to trigger the download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  }
+
   function downloadBlob(blob: any, filename: string) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -102,10 +126,19 @@ export default function DashboardKeys() {
   // usage
   async function download(objectKey: string) {
     try {
-      // const result = await API.post(API_NAMES.getPresigned, "getSignedObjectUrl", { key: objectKey })
-      const result = await Storage.get(objectKey, { download: true, region: "us-west-1", expires: 3600 });
-      console.log(result);
-      downloadBlob(result.Body, objectKey);
+      const result = await API.post(API_NAMES.getPresigned, "getSignedObjectUrl",
+        {
+          headers: {
+            Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+          },
+          body: {
+            key: objectKey
+          },
+        })
+      // const result = await Storage.get(objectKey, { download: false, region: "us-west-1", expires: 3600 });
+      console.log("PRESIGNED URL:", result);
+      // downloadBlob(result, objectKey);
+      downloadUrl(result, objectKey);
     } catch (e) {
       console.error(e);
     }
