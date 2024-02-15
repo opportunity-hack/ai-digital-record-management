@@ -1,8 +1,9 @@
+// @ts-nocheck
 import { Constants, INFRA_CONFIG } from "@devblocks/models";
-import { Amplify, Storage } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 
 import API_NAMES from "@/constants/api-names";
-import envInfo from "@root/local-env-info.json";
+import cdkExport from "@root/exports/cdk-exports-dev.json"
 
 export const initialize = () => {
   const baseAmplifyCDKStackName: string = INFRA_CONFIG.amplifyStackConfiguration.stackName;
@@ -10,7 +11,7 @@ export const initialize = () => {
   // Load the exports provisioned by AWS CDK.
   // The comment below turns off ESLint just for this line.
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const cdkExport = require(`@root/exports/cdk-exports-${envInfo.envName}.json`);
+  
   console.log(cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION.replaceAll("_", "")]);
   Amplify.configure({
     Auth: {
@@ -32,6 +33,10 @@ export const initialize = () => {
         {
           name: API_NAMES.getPresigned,
           endpoint: cdkExport[documentSearchCDKStackName].getpresignedurl,
+        },
+        {
+          name: API_NAMES.getUpload,
+          endpoint: cdkExport[documentSearchCDKStackName].getpresignedurlput,
         },
       ],
     },

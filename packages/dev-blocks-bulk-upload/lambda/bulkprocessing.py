@@ -37,7 +37,7 @@ def handler(event, context):
         s3_resource.meta.client.upload_fileobj(
             z.open(filename),
             Bucket=bucket_name,
-            Key=f'{added_folder}/{filename}'
+            Key=f'{added_folder}/{filename.replace(" ", "-")}'
         )
         
     return {

@@ -411,6 +411,53 @@ export class DocumentSearchStack extends Stack {
     // adding post method
     get_preSignedURL_api_path.addMethod("POST", get_preSignedURL_integration);
 
+    // ====================================================================================================
+    const preserve_search_upload_presigned_url_put = new lambda.Function(this, "preserve_search_get_object_presignedURL_put", {
+      runtime: lambda.Runtime.PYTHON_3_10,
+      code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
+      handler: "getUploadURL.handler",
+      environment: {
+        BUCKET_NAME: documentStorageBucket.bucketName,
+      },
+    });
+    documentStorageBucket.grantReadWrite(preserve_search_upload_presigned_url_put);
+
+    preserve_search_upload_presigned_url_put.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["logs:*", "apigateway:*", "s3:*", "dynamodb:*"],
+        resources: ["*"],
+      }),
+    );
+
+    // API to get the presigned URL
+    const get_preSignedURL_API_put = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API_put", {
+      cloudWatchRole: true,
+      deployOptions: {
+        accessLogDestination: new aws_apigateway.LogGroupLogDestination(
+          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group_put", {
+            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group_put",
+            retention: aws_logs.RetentionDays.ONE_MONTH,
+            removalPolicy: RemovalPolicy.DESTROY,
+          }),
+        ),
+      },
+      defaultCorsPreflightOptions: {
+        allowHeaders: ["*"],
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+        allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      },
+    });
+
+    // get_presigned_URL integration
+    const get_preSignedURL_integration_put = new aws_apigateway.LambdaIntegration(preserve_search_upload_presigned_url_put);
+
+    // declaring the resource and then adding method
+    const get_preSignedURL_api_path_put = get_preSignedURL_API_put.root.addResource("getSignedObjectUrl");
+
+    // adding post method
+    get_preSignedURL_api_path_put.addMethod("POST", get_preSignedURL_integration_put);
+
     new CfnOutput(this, Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION, {
       exportName: Constants.DocumentSearchConstants.SEARCH_DOCUMENT_API_ENDPOINT_REGION.replaceAll("_", "-"),
       value: props.env?.region ?? "us-west-1",
@@ -428,6 +475,11 @@ export class DocumentSearchStack extends Stack {
     new CfnOutput(this, "getpresignedurl", {
       exportName: "getpresignedurl",
       value: get_preSignedURL_API.url,
+    });
+
+    new CfnOutput(this, "getpresignedurlput", {
+      exportName: "getpresignedurlput",
+      value: get_preSignedURL_API_put.url,
     });
 
     new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT, {

@@ -1,16 +1,18 @@
 {
   "stupidfuck-document-search-stack": {
-    "stupidfuckeditdocumentapidevuswest1EndpointBE33DB85": "https://y19ulz8pfh.execute-api.us-west-1.amazonaws.com/prod/",
     "searchdocumentapiendpointregion": "us-west-1",
     "editdocumentapiendpointregion": "us-west-1",
-    "getpresignedurl": "https://uaff8ejao0.execute-api.us-west-1.amazonaws.com/prod/",
+    "dpreservesearchgetobjectpreSignedURLAPIputEndpoint08E7B0E4": "https://l9vl2lzx0b.execute-api.us-west-1.amazonaws.com/prod/",
     "stupidfucksearchdocumentapidevuswest1Endpoint85608450": "https://eacjvcxpl9.execute-api.us-west-1.amazonaws.com/prod/",
-    "dpreservesearchgetobjectpreSignedURLAPIEndpointC43B43B3": "https://uaff8ejao0.execute-api.us-west-1.amazonaws.com/prod/",
     "ExportsOutputRefstupidfucksearchdocumentapidevuswest1764444D95C1DA20A": "eacjvcxpl9",
-    "ExportsOutputRefstupidfucksearchdocumentapidevuswest1DeploymentStageprodC9D263E2B39C24D8": "prod",
-    "documentbucketname": "stupidfuck-bucket-storage",
     "editdocumentapiendpoint": "https://y19ulz8pfh.execute-api.us-west-1.amazonaws.com/prod/",
     "documentbucketregion": "us-west-1",
+    "stupidfuckeditdocumentapidevuswest1EndpointBE33DB85": "https://y19ulz8pfh.execute-api.us-west-1.amazonaws.com/prod/",
+    "getpresignedurl": "https://uaff8ejao0.execute-api.us-west-1.amazonaws.com/prod/",
+    "dpreservesearchgetobjectpreSignedURLAPIEndpointC43B43B3": "https://uaff8ejao0.execute-api.us-west-1.amazonaws.com/prod/",
+    "ExportsOutputRefstupidfucksearchdocumentapidevuswest1DeploymentStageprodC9D263E2B39C24D8": "prod",
+    "documentbucketname": "stupidfuck-bucket-storage",
+    "getpresignedurlput": "https://l9vl2lzx0b.execute-api.us-west-1.amazonaws.com/prod/",
     "searchdocumentapiendpoint": "https://eacjvcxpl9.execute-api.us-west-1.amazonaws.com/prod/"
   },
   "stupidfuck-amplify-stack": {

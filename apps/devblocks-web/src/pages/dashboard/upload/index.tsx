@@ -33,12 +33,49 @@ export default function DashboardKeys() {
     setFile(file);
   };
 
+  async function uploadFile(url: any, headers: any) {
+    try {
+      if (url && file) {
+        // Use fetch to download the file using the pre-signed URL
+        const formData = new FormData();
+        formData.append("key", headers.key);
+        formData.append("AWSAccessKeyId", headers["AWSAccessKeyId"]);
+        formData.append("x-amz-security-token", headers["x-amz-security-token"]);
+        formData.append("policy", headers.policy);
+        formData.append("signature", headers.signature);
+        formData.append("file", file, file.name);
+        console.log(formData)
+
+        const fileResponse = await fetch(url, {
+          method: 'POST',
+          body: formData,
+          redirect: 'follow',
+        });
+        console.log(fileResponse)
+      }
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  }
+
   async function upload(e: any) {
     if (!file) {
       return;
     }
     try {
-      await Storage.put(`zip/${file?.name}`, file, { contentType: "application/zip" });
+      const newFileName = file.name.replace(/\s/g, "-");
+      const result = await API.post(API_NAMES.getUpload, "getSignedObjectUrl",
+        {
+          headers: {
+            Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+          },
+          body: {
+            key: `zip/${newFileName}`
+          },
+        })
+      console.log(result)
+      uploadFile(result['url'], result['fields'])
+      // await Storage.put(`zip/${file?.name}`, file, { contentType: "application/zip" });
     } catch (error) {
       console.log("Error uploading file: ", error);
     }

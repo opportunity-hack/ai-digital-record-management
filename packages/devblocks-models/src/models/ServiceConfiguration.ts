@@ -48,3 +48,11 @@ export interface DocumentSearchStackConfiguration {
 
   readonly documentSearchIndexName: string;
 }
+
+export interface StaticWebsiteHostingStackConfiguration {
+  readonly stackName: string;
+  readonly bucketName: string;
+  readonly bucketDeploymentName: string;
+  readonly distributionName: string;
+  readonly originAccessIdentityName: string;
+}

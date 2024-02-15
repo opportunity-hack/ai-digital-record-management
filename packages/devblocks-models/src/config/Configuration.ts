@@ -1,6 +1,6 @@
 import type { StageConfiguration } from "../models/StageConfiguration";
 
-export const APP_NAME: string = "stupidfuck";
+export const APP_NAME: string = "opportunity";
 export const ENVIRONMENT_NAME: string = APP_NAME.toLowerCase();
 
 export const INFRA_CONFIG: StageConfiguration = {
@@ -51,5 +51,13 @@ export const INFRA_CONFIG: StageConfiguration = {
     storeTextTextractTopicName: `${ENVIRONMENT_NAME}-store-text-textract-topic`,
     storeTextTranscribeTopicName: `${ENVIRONMENT_NAME}-store-text-transcribe-topic`,
     storeTagsRekognitionTopicName: `${ENVIRONMENT_NAME}-store-tags-rekognition-topic`,
+  },
+
+  staticWebsiteHostingStackConfiguration: {
+    stackName: `${ENVIRONMENT_NAME}-nextjs-ssg-hosting-stack`,
+    bucketName: `${ENVIRONMENT_NAME}-nextjs-ssg-hosting-bucket`,
+    bucketDeploymentName: `${ENVIRONMENT_NAME}-nextjs-ssg-hosting-bucket-deployment`,
+    distributionName: `${ENVIRONMENT_NAME}-nextjs-ssg-hosting-distribution`,
+    originAccessIdentityName: `${ENVIRONMENT_NAME}-nextjs-ssg-hosting-origin-access-identity`,
   },
 };
