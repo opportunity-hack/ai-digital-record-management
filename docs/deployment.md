@@ -194,3 +194,6 @@ cd ../devblocks-cdk
 ```bash
 cdk deploy --all -c stage="dev" -c region="us-west-1" -c account="[AWS ACCOUNT ID]" --profile=[PROFILE NAME]
 ```
+
+5. Once the resources are deployed, you would be able to find the link to the website in the command line.
+It should be in the format `[RANDOM SEQUENCE OF TEXT].cloudfront.net`
