@@ -37,20 +37,18 @@ export default function Dashboard() {
             <div>
               This website&apos;s search functionality is located by clicking on the tab &apos;Search&apos; on the navbar on the left.
               <Image className="my-4 rounded border-2 border-black" src={searchTabInstructions} alt="Search Tab Instructions" />
-              There, the users would be able to search for files using various fields such as the text, location or date.
+              There, the users would be able to search for files using various fields such as the text, or date.
             </div>
           }
         />
       </span>
       <span className="shadow-box mt-4 flex flex-col p-4 pb-2">
         <Accordion
-          title={
-            <div className="flex flex-row">
-              <div className="mr-2 rounded bg-pc px-4 text-white">ADMIN</div>
-              Uploading files
-            </div>
-          }
-          body={<div>Searching</div>}
+          title="Uploading files"
+          body={<div>
+            This website&apos;s upload functionality is located by clicking on the tab &apos;Upload&apos; on the navbar on the left.
+            There, the users would be able to upload zip files based on the instruction provided.
+          </div>}
         />
       </span>
     </DashboardLayout>,
