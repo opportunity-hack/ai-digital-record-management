@@ -168,7 +168,7 @@ cd apps/devblocks-cdk
 
 2. From here, run the following command. Make sure to replace [AWS ACCOUNT ID] and [YOUR PROFILE NAME] with your actual account id and profile name respectively:
 ```bash
-cdk deploy op-hack-document-search-stack op-hack-amplify-stack -c stage="dev" -c region="us-west-1" -c account="[AWS ACCOUNT ID]" --profile=[YOUR PROFILE NAME] -O ../devblocks-web/exports/cdk-exports-dev.json 
+cdk deploy --all -c stage="dev" -c region="us-west-1" -c account="[AWS ACCOUNT ID]" --profile=[YOUR PROFILE NAME] -O ../devblocks-web/exports/cdk-exports-dev.json 
 ```
 Write y and click enter for all the prompts that show up
 
@@ -192,5 +192,5 @@ cd ../devblocks-cdk
 ```
 4. Then, run the following. Again, make sure to replace  [AWS ACCOUNT ID]  and [PROFILE NAME] with your actual account id and profile name respectively:
 ```bash
-cdk deploy op-hack-nextjs-ssg-hosting-stack -c stage="dev" -c region="us-west-1" -c account="[AWS ACCOUNT ID]" --profile=[PROFILE NAME]
+cdk deploy --all -c stage="dev" -c region="us-west-1" -c account="[AWS ACCOUNT ID]" --profile=[PROFILE NAME]
 ```

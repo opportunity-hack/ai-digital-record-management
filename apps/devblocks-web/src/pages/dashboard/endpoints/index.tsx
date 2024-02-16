@@ -227,10 +227,10 @@ export default function DashboardKeys() {
                 <div>Location</div>
                 <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="location" />
               </label> */}
-                <label className="flex-1" htmlFor="tags">
+                {/* <label className="flex-1" htmlFor="tags">
                   <div>Tags</div>
                   <TagInput tags={advancedTags} setTags={setAdvancedTags} />
-                </label>
+                </label> */}
               </div>
             }
             title="Advanced Search Options"
