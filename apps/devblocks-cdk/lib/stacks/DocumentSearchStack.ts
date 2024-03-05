@@ -25,7 +25,7 @@ export class DocumentSearchStack extends Stack {
     super(scope, id, props);
 
     // S3 Storage bucket where all documents will be stored.
-    const documentStorageBucket = new aws_s3.Bucket(this, `${props.documentSearchStackConfiguration.documentStorageBucketName}-12323`, {
+    const documentStorageBucket = new aws_s3.Bucket(this, `${props.documentSearchStackConfiguration.documentStorageBucketName}-123231232`, {
       bucketName: props.documentSearchStackConfiguration.documentStorageBucketName,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -50,6 +50,9 @@ export class DocumentSearchStack extends Stack {
         enabled: false,
       },
       capacity: {
+        masterNodeInstanceType: "t3.small.search",
+        warmInstanceType: "t3.small.search",
+        dataNodeInstanceType: "t3.small.search",
         multiAzWithStandbyEnabled: false,
       },
       removalPolicy: RemovalPolicy.DESTROY,
@@ -165,7 +168,7 @@ export class DocumentSearchStack extends Stack {
     // ====================================================================================================
     // Lambda function for processing .zip file
     // ====================================================================================================
-    const processZipFiles = new lambda.Function(this, "document-search-process-zip-files", {
+    const processZipFiles = new lambda.Function(this, "document-search-process-zip-files-1232", {
       runtime: lambda.Runtime.PYTHON_3_10,
       code: lambda.Code.fromAsset("../../packages/dev-blocks-bulk-upload/lambda"),
       handler: "bulkprocessing.handler",
@@ -366,7 +369,7 @@ export class DocumentSearchStack extends Stack {
     });
 
     // Lambda function to upload data to S3 bucket uasing presigned URL from the Backup bucket
-    const preserve_search_upload_presigned_url = new lambda.Function(this, "preserve_search_get_object_presignedURL", {
+    const preserve_search_upload_presigned_url = new lambda.Function(this, "preserve_search_get_object_presignedURL-1232", {
       runtime: lambda.Runtime.PYTHON_3_10,
       code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
       handler: "getSignedURL.handler",
@@ -384,12 +387,12 @@ export class DocumentSearchStack extends Stack {
     );
 
     // API to get the presigned URL
-    const get_preSignedURL_API = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API", {
+    const get_preSignedURL_API = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API-1232", {
       cloudWatchRole: true,
       deployOptions: {
         accessLogDestination: new aws_apigateway.LogGroupLogDestination(
-          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group", {
-            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group",
+          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group-1232", {
+            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group-1232",
             retention: aws_logs.RetentionDays.ONE_MONTH,
             removalPolicy: RemovalPolicy.DESTROY,
           }),
@@ -412,7 +415,7 @@ export class DocumentSearchStack extends Stack {
     get_preSignedURL_api_path.addMethod("POST", get_preSignedURL_integration);
 
     // ====================================================================================================
-    const preserve_search_upload_presigned_url_put = new lambda.Function(this, "preserve_search_get_object_presignedURL_put", {
+    const preserve_search_upload_presigned_url_put = new lambda.Function(this, "preserve_search_get_object_presignedURL_put-1232", {
       runtime: lambda.Runtime.PYTHON_3_10,
       code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
       handler: "getUploadURL.handler",
@@ -431,12 +434,12 @@ export class DocumentSearchStack extends Stack {
     );
 
     // API to get the presigned URL
-    const get_preSignedURL_API_put = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API_put", {
+    const get_preSignedURL_API_put = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API_put-1232", {
       cloudWatchRole: true,
       deployOptions: {
         accessLogDestination: new aws_apigateway.LogGroupLogDestination(
-          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group_put", {
-            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group_put",
+          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group_put-1232", {
+            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group_put-1232",
             retention: aws_logs.RetentionDays.ONE_MONTH,
             removalPolicy: RemovalPolicy.DESTROY,
           }),
