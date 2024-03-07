@@ -36,27 +36,31 @@ export default function DashboardKeys() {
   };
 
   async function uploadFile(url: any, headers: any) {
-    try {
-      if (url && file) {
-        // Use fetch to download the file using the pre-signed URL
-        const formData = new FormData();
-        formData.append("key", headers.key);
-        formData.append("AWSAccessKeyId", headers["AWSAccessKeyId"]);
-        formData.append("x-amz-security-token", headers["x-amz-security-token"]);
-        formData.append("policy", headers.policy);
-        formData.append("signature", headers.signature);
-        formData.append("file", file, file.name);
-        console.log(formData)
-
-        const fileResponse = await fetch(url, {
-          method: 'POST',
-          body: formData,
-          redirect: 'follow',
-        });
-        console.log(fileResponse)
-      }
-    } catch (error) {
-      console.error('Error downloading file:', error);
+    if (url && file) {
+      console.log(file)
+      // Use fetch to download the file using the pre-signed URL
+      const formData = new FormData();
+      formData.append("key", headers.key);
+      formData.append("AWSAccessKeyId", headers["AWSAccessKeyId"]);
+      formData.append("x-amz-security-token", headers["x-amz-security-token"]);
+      formData.append("policy", headers.policy);
+      formData.append("signature", headers.signature);
+      formData.append("file", file, file.name);
+      // console.log("HEADERS:", headers)
+      // console.log(formData.get("key"))
+      // console.log(formData.get("AWSAccessKeyId"))
+      // console.log(formData.get("x-amz-security-token"))
+      // console.log(formData.get("policy"))
+      // console.log(formData.get("signature"))
+      // console.log(formData.get("file"))
+      // console.log("URL:", url)
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+      const fileResponse = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow',
+      });
+      console.log(fileResponse)
     }
   }
 
@@ -79,12 +83,13 @@ export default function DashboardKeys() {
             key: `zip/${newFileName}`
           },
         })
+      console.log(`Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`)
       console.log(result)
-      uploadFile(result['url'], result['fields'])
+      await uploadFile(result['url'], result['fields'])
       setMessage("File uploaded successfully");
       // await Storage.put(`zip/${file?.name}`, file, { contentType: "application/zip" });
     } catch (error) {
-      console.log("Error uploading file: ", error);
+      console.error("Error uploading file: ", error);
       setMessage("Error uploading file");
     }
     setLoading(false);
@@ -126,7 +131,7 @@ export default function DashboardKeys() {
             </label>
           </div>
           <button className="font-xl w-full rounded-sm bg-pc h-10 items-center justify-center flex py-2 text-white " type="button" onClick={upload}>
-            {loading? <Spinner/>: "Upload"}
+            {loading ? <Spinner /> : "Upload"}
           </button>
           <div className="text-sm font-bold text-red w-full text-center">{message}</div>
         </div>

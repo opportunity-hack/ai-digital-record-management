@@ -43,10 +43,10 @@ export const editObject = async (bucketName: string, objectKey: string, text: st
   const id = `${bucketName}-${objectKey}`;
 
   const document = {
-    text: `${text}`,
+    text: `${text?.toLowerCase()}`,
     date,
     location,
-    tags,
+    tags: tags.map((tag) => tag.toLowerCase()),
     bucketName,
     objectKey,
   };

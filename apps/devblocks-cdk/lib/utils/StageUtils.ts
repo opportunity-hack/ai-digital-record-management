@@ -44,7 +44,7 @@ export class StageUtils {
       stage: this.stage,
       staticWebsiteHostingStackConfiguration: this.configuration.staticWebsiteHostingStackConfiguration,
       staticAssetsFilePath: path.resolve(__dirname, "../../../../apps/devblocks-web/out"),
-      cfnOutputName: "StaticWebsiteHostingStackDomainName",
+      cfnOutputName: `${this.configuration.staticWebsiteHostingStackConfiguration.stackName}-domain-name`,
     });
   };
 }

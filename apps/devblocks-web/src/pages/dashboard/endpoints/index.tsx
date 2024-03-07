@@ -39,11 +39,14 @@ export default function DashboardKeys() {
   const [advancedIsActive, setAdvancedIsActive] = useState(false);
   const [advancedDateIsFocused, setAdvancedDateIsFocused] = useState(false);
 
+  useEffect(() => { onSearch(null) }, [])
+
   console.log(editText);
   let footer = <p>Please pick a day.</p>;
   if (editDate) {
     footer = <p>You picked {format(editDate, "PP")}.</p>;
   }
+
 
   const onSearch = async (event: any) => {
     try {
@@ -61,7 +64,7 @@ export default function DashboardKeys() {
           body: {
             text: searchText,
             date: advancedIsActive && advancedDate && format(advancedDate, "MM/dd/yy").toString(),
-            tags: advancedIsActive && advancedTags.toString(),
+            tags: advancedIsActive && advancedTags
           },
         })
       ).message.hits;
@@ -223,14 +226,10 @@ export default function DashboardKeys() {
                   </div>
                   {advancedDateIsFocused && <DayPicker className="color-black shadow-box absolute bg-white p-2" mode="single" selected={advancedDate} onSelect={setAdvancedDate} footer={footer} showOutsideDays fixedWeeks />}
                 </label>
-                {/* <label className="mt-2" htmlFor="location">
-                <div>Location</div>
-                <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="location" />
-              </label> */}
-                {/* <label className="flex-1" htmlFor="tags">
+                <label className="flex-1" htmlFor="tags">
                   <div>Tags</div>
                   <TagInput tags={advancedTags} setTags={setAdvancedTags} />
-                </label> */}
+                </label>
               </div>
             }
             title="Advanced Search Options"

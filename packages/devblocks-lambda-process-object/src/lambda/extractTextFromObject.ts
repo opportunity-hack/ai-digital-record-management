@@ -31,7 +31,7 @@ async function extractTextFromDocx(bucketName: string, objectKey: string) {
 }
 
 export const extractTextFromObject = async (bucketName: string, objectKey: string) => {
-  const extension = objectKey.split(".").pop();
+  const extension = (objectKey.split(".").pop() || "").toLowerCase();
 
   switch (extension) {
     case "docx":

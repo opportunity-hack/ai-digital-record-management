@@ -57,10 +57,10 @@ export default function Login() {
 
         <AccountButton text="Log in" disabled={loginDisabled} />
 
-        <span className="mt-2 flex w-full  justify-between text-left text-sm font-semibold ">
-          <Link className="text-pc underline" href={ROUTES.resetPassword}>
+        <span className="mt-2 flex w-full  justify-center text-left text-sm font-semibold ">
+          {/* <Link className="text-pc underline" href={ROUTES.resetPassword}>
             Forgot Password?
-          </Link>
+          </Link> */}
           <span>
             New user?{" "}
             <Link className="text-pc underline" href={ROUTES.signup}>

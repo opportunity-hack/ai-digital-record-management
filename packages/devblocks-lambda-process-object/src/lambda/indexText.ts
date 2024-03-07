@@ -43,10 +43,10 @@ export const indexText = async (bucketName: string, objectKey: string, text: str
   const id = `${bucketName}-${objectKey}`;
 
   const document = {
-    text: `${text}\n\n${tags.join(" ")}`,
+    text: `${text.toLowerCase()}\n\n${tags.join(" ")}`,
     date: null,
     location: null,
-    tags,
+    tags: tags.map((tag) => tag.toLowerCase()),
     bucketName,
     objectKey,
   };

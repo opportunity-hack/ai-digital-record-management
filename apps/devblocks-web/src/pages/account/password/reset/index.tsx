@@ -18,7 +18,8 @@ export default function ForgotPassword() {
     setDisabled(true);
 
     try {
-      await Auth.forgotPassword(email);
+      const res = await Auth.forgotPassword(email);
+      console.log(res)
       setStatus("Password reset email sent.");
     } catch (error: any) {
       setStatus(error.message);

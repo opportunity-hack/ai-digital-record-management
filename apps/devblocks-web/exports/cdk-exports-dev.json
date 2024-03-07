@@ -1,29 +1,29 @@
 {
-  "opportunity-document-search-stack": {
-    "searchdocumentapiendpointregion": "",
-    "editdocumentapiendpointregion": "",
-    "dpreservesearchgetobjectpreSignedURLAPIputEndpoint08E7B0E4": "",
-    "opportunitysearchdocumentapidevuswest1Endpoint85608450": "",
-    "ExportsOutputRefopportunitysearchdocumentapidevuswest1764444D95C1DA20A": "",
-    "editdocumentapiendpoint": "",
-    "documentbucketregion": "",
-    "opportunityeditdocumentapidevuswest1EndpointBE33DB85": "",
-    "getpresignedurl": "",
-    "dpreservesearchgetobjectpreSignedURLAPIEndpointC43B43B3": "",
-    "ExportsOutputRefopportunitysearchdocumentapidevuswest1DeploymentStageprodC9D263E2B39C24D8": "",
-    "documentbucketname": "",
-    "getpresignedurlput": "",
-    "searchdocumentapiendpoint": ""
+  "opporhackity-2023-nextjs-ssg-hosting-stack": {
+    "opporhackity2023nextjsssghostingstackdomainname": "d39l5g9aumluml.cloudfront.net"
   },
-  "opportunity-nextjs-ssg-hosting-stack": {
-    "StaticWebsiteHostingStackDomainName": ""
+  "opporhackity-2023-document-search-stack": {
+    "searchdocumentapiendpointregion": "us-west-2",
+    "editdocumentapiendpointregion": "us-west-2",
+    "opporhackity2023searchdocumentapidevuswest2EndpointCC2B2B22": "https://4c7cc14fvf.execute-api.us-west-2.amazonaws.com/prod/",
+    "ExportsOutputRefopporhackity2023searchdocumentapidevuswest2FEFF57E1A8838BDE": "4c7cc14fvf",
+    "editdocumentapiendpoint": "https://5i7zci4fzj.execute-api.us-west-2.amazonaws.com/prod/",
+    "documentbucketregion": "us-west-2",
+    "dpreservesearchgetobjectpreSignedURLAPI1232EndpointBC179B54": "https://xd1b6md6ld.execute-api.us-west-2.amazonaws.com/prod/",
+    "dpreservesearchgetobjectpreSignedURLAPIput1232Endpoint981DDA2E": "https://wk07my9kul.execute-api.us-west-2.amazonaws.com/prod/",
+    "opporhackity2023editdocumentapidevuswest2EndpointDE58036D": "https://5i7zci4fzj.execute-api.us-west-2.amazonaws.com/prod/",
+    "getpresignedurl": "https://xd1b6md6ld.execute-api.us-west-2.amazonaws.com/prod/",
+    "documentbucketname": "opporhackity-2023-bucket-storage",
+    "getpresignedurlput": "https://wk07my9kul.execute-api.us-west-2.amazonaws.com/prod/",
+    "ExportsOutputRefopporhackity2023searchdocumentapidevuswest2DeploymentStageprod0022F20E665C4E87": "prod",
+    "searchdocumentapiendpoint": "https://4c7cc14fvf.execute-api.us-west-2.amazonaws.com/prod/"
   },
-  "opportunity-amplify-stack": {
-    "awsuserpoolsid": "",
-    "amplifyappid": "",
-    "awsprojectregion": "",
-    "awscognitoregion": "",
-    "awsuserpoolswebclientid": "",
-    "awscognitoidentitypoolid": ""
+  "opporhackity-2023-amplify-stack": {
+    "awsuserpoolsid": "us-west-2_Egn0gHof2",
+    "amplifyappid": "d262u9vjr8xrkx",
+    "awsprojectregion": "us-west-2",
+    "awscognitoregion": "us-west-2",
+    "awsuserpoolswebclientid": "466sfql7kusr4b3n449satthos",
+    "awscognitoidentitypoolid": "us-west-2:2dda10cb-001c-469c-8fc9-5abdfe1bb6af"
   }
 }

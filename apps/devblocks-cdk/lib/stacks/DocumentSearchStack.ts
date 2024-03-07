@@ -51,7 +51,6 @@ export class DocumentSearchStack extends Stack {
       },
       capacity: {
         masterNodeInstanceType: "t3.small.search",
-        warmInstanceType: "t3.small.search",
         dataNodeInstanceType: "t3.small.search",
         multiAzWithStandbyEnabled: false,
       },

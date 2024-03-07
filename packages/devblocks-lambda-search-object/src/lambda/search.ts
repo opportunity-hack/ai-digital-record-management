@@ -58,7 +58,7 @@ export const search = async (text: string, location: string, date: Date, tags: A
     must.push({
       fuzzy: {
         text: {
-          value: text,
+          value: text.toLowerCase(),
           fuzziness: "AUTO",
         },
       },
@@ -84,22 +84,29 @@ export const search = async (text: string, location: string, date: Date, tags: A
   }
 
   if (tags && tags.length > 0) {
-    must.push({
-      terms: {
-        tags: text,
-      },
+    tags.map((tag) => {
+      must.push({
+        match: {
+          tags: {
+            query: tag.toLowerCase(),
+          },
+        },
+      });
     });
   }
+
+  console.log(must);
 
   const query = {
     query: {
       bool: {
         should: must,
-      },
+        minimum_should_match: "100%",
+      }
     },
   };
 
-  console.log(must);
+  console.log(query);
 
   const response = await client.search({
     index: indexName,
