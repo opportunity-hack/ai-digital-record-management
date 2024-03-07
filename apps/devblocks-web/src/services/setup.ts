@@ -31,6 +31,10 @@ export const initialize = () => {
           endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "")],
         },
         {
+          name: API_NAMES.autocomplete,
+          endpoint: cdkExport[documentSearchCDKStackName][Constants.DocumentSearchConstants.AUTOCOMPLETE_API_ENDPOINT.replaceAll("_", "")],
+        },
+        {
           name: API_NAMES.getPresigned,
           endpoint: cdkExport[documentSearchCDKStackName].getpresignedurl,
         },

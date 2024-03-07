@@ -14,6 +14,21 @@ const client = new Client({
   node: `https://${process.env.OPENSEARCH_ENDPOINT}`, // OpenSearch domain URL
 });
 
+const createNewTagIndex = async () => {
+  const indexExists = await client.indices.exists({ index: "tags" });
+  if (indexExists.statusCode === 200) return;
+  
+  await client.indices.create({
+    index: "tags",
+    body: {
+      mappings: {
+        properties: {
+          text: { type: "text" }
+        },
+      },
+    },
+  });
+}
 const createNewIndex = async (indexName: string): Promise<any> => {
   const indexExists = await client.indices.exists({ index: indexName });
   if (indexExists.statusCode === 200) return;
@@ -39,6 +54,7 @@ export const search = async (text: string, location: string, date: Date, tags: A
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
+  await createNewTagIndex();
 
   // const query = {
   //   query: {

@@ -4,21 +4,19 @@ const { AwsSigv4Signer } = require("@opensearch-project/opensearch/aws");
 
 const client = new Client({
   ...AwsSigv4Signer({
-    region: process.env.REGION || "us-east-1",
+    region: process.env.REGION ?? "us-east-1",
     service: "es",
     getCredentials: () => {
       const credentialsProvider = defaultProvider();
       return credentialsProvider();
     },
   }),
-  node: `https://${process.env.OPENSEARCH_ENDPOINT}` || "", // OpenSearch domain URL
+  node: `https://${process.env.OPENSEARCH_ENDPOINT}`, // OpenSearch domain URL
 });
 
 const createNewTagIndex = async () => {
-  
   const indexExists = await client.indices.exists({ index: "tags" });
   if (indexExists.statusCode === 200) return;
-  
   await client.indices.create({
     index: "tags",
     body: {
@@ -31,7 +29,7 @@ const createNewTagIndex = async () => {
   });
 }
 
-const createNewIndex = async (indexName: string) => {
+const createNewIndex = async (indexName: string): Promise<any> => {
   const indexExists = await client.indices.exists({ index: indexName });
   if (indexExists.statusCode === 200) return;
 
@@ -52,39 +50,35 @@ const createNewIndex = async (indexName: string) => {
   });
 };
 
-export const indexText = async (bucketName: string, objectKey: string, text: string, tags: Array<string>) => {
+export const search = async (text: string) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
   await createNewTagIndex();
 
-  const id = `${bucketName}-${objectKey}`;
-
-  const document = {
-    text: `${text.toLowerCase()}\n\n${tags.join(" ")}`,
-    date: null,
-    location: null,
-    tags: tags.map((tag) => tag.toLowerCase()),
-    bucketName,
-    objectKey,
+  let query: any = {
+    query: {
+      match_phrase_prefix: {
+        text: {
+          query: text
+        }
+      }
+    },
   };
 
-  const response = await client.index({
-    id,
-    index: indexName,
-    body: document,
-    refresh: true,
-  });
-
-  if (tags && tags.length > 0) {
-    tags.map((tag) => client.index({
-      id: tag.toLowerCase(),
-      index: "tags",
-      body: {
-        text: tag.toLowerCase(),
-      },
-    }));
+  if (text.length === 0) {
+    query = {
+      query: {
+        size: 100,
+        match_all: {}
+      }
+    };
   }
 
-  return response;
+  const response = await client.search({
+    index: "tags",
+    body: query,
+  });
+
+  return response.body.hits.hits.map((hit: any) => hit._source.text);
 };

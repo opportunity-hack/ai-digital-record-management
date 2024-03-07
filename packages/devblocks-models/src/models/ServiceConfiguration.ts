@@ -33,6 +33,11 @@ export interface DocumentSearchStackConfiguration {
   readonly storeTextTranscribeTopicName: string;
   readonly storeTagsRekognitionTopicName: string;
 
+  readonly autocompleteLambdaName: string;
+  readonly autocompleteApiName: string;
+  readonly autocompleteDeploymentName: string;
+  readonly autocompleteStageName: string;
+
   readonly updateOpensearchLambdaName: string;
 
   readonly processDocumentLambdaName: string;

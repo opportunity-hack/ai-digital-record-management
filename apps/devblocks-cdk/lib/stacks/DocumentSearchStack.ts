@@ -303,10 +303,57 @@ export class DocumentSearchStack extends Stack {
     // ====================================================================================================
     // Lambda function for searching documents
     // ====================================================================================================
-    // const locationService = new aws_location.CfnPlaceIndex(this, `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}-${props.env?.region}`, {
-    //   dataSource: "Esri",
-    //   indexName: `${props.documentSearchStackConfiguration.locationServiceName}-${props.stage}`,
-    // });
+    const autocompleteLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.autocompleteLambdaName}-${props.stage}-${props.env?.region}`, {
+      functionName: `${props.documentSearchStackConfiguration.autocompleteLambdaName}`,
+      entry: path.join(__dirname, "../../../../packages/devblocks-lambda-autocomplete/src/lambda/main.ts"),
+      runtime: aws_lambda.Runtime.NODEJS_18_X,
+
+      // We add a timeout here different from the default of 3 seconds, since we expect these API calls to take longer
+      timeout: Duration.minutes(15),
+      memorySize: 2048,
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        sourceMapMode: aws_lambda_nodejs.SourceMapMode.BOTH,
+        sourcesContent: false,
+        target: "esnext",
+      },
+      environment: {
+        REGION: props.env?.region ?? "us-west-1",
+        OPENSEARCH_ENDPOINT: documentSearchIndex.domainEndpoint,
+        OPENSEARCH_MASTER_PASSWORD: documentSearchIndex.masterUserPassword?.toString() ?? "",
+      },
+    });
+    autocompleteLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: ["es:*"],
+        resources: ["*"],
+      }),
+    );
+
+    const autocompleteApi = new aws_apigateway.LambdaRestApi(this, `${props.documentSearchStackConfiguration.autocompleteApiName}-${props.stage}-${props.env?.region}`, {
+      restApiName: `${props.documentSearchStackConfiguration.autocompleteApiName}-${props.stage}`,
+      handler: autocompleteLambda,
+      proxy: false,
+      defaultCorsPreflightOptions: {
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+        allowHeaders: aws_apigateway.Cors.DEFAULT_HEADERS,
+        allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      },
+    });
+    const autocompleteIntegration = new aws_apigateway.LambdaIntegration(autocompleteLambda);
+    autocompleteApi.root.addMethod("POST", autocompleteIntegration);
+
+    const autocompleteApiDeployment = new aws_apigateway.Deployment(this, `${props.documentSearchStackConfiguration.autocompleteDeploymentName}-${props.stage}-${props.env?.region}`, {
+      api: autocompleteApi,
+    });
+
+    new aws_apigateway.Stage(this, `${props.documentSearchStackConfiguration.autocompleteStageName}-${props.stage}-${props.env?.region}`, {
+      stageName: `${props.documentSearchStackConfiguration.autocompleteStageName}-${props.stage}`,
+      deployment: autocompleteApiDeployment,
+    });
+
 
     const editDocumentLambda = new aws_lambda_nodejs.NodejsFunction(this, `${props.documentSearchStackConfiguration.editDocumentLambdaName}-${props.stage}-${props.env?.region}`, {
       functionName: `${props.documentSearchStackConfiguration.editDocumentLambdaName}`,
@@ -487,6 +534,11 @@ export class DocumentSearchStack extends Stack {
     new CfnOutput(this, Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: editDocumentApi.url,
+    });
+    
+    new CfnOutput(this, Constants.DocumentSearchConstants.AUTOCOMPLETE_API_ENDPOINT, {
+      exportName: Constants.DocumentSearchConstants.AUTOCOMPLETE_API_ENDPOINT.replaceAll("_", "-"),
+      value: autocompleteApi.url,
     });
 
     new CfnOutput(this, Constants.DocumentSearchConstants.DOCUMENT_BUCKET_REGION, {

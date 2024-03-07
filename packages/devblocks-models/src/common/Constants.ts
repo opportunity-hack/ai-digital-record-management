@@ -24,6 +24,9 @@ export namespace Constants {
     export const EDIT_DOCUMENT_API_ENDPOINT: string = "edit_document_api_endpoint";
     export const EDIT_DOCUMENT_API_ENDPOINT_REGION: string = "edit_document_api_endpoint_region";
 
+    export const AUTOCOMPLETE_API_ENDPOINT: string = "autocomplete_api_endpoint";
+    export const AUTOCOMPLETE_API_ENDPOINT_REGION: string = "autocomplete_api_endpoint_region";
+
     export const DOCUMENT_BUCKET_REGION: string = "document_bucket_region";
     export const DOCUMENT_BUCKET_NAME: string = "document_bucket_name";
   }

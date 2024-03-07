@@ -1,7 +1,35 @@
-import React, { useState } from "react";
+import API_NAMES from "@/constants/api-names";
+import { API, Auth } from "aws-amplify";
+import React, { useEffect, useState } from "react";
 
 const TagInput = ({ tags, setTags }: any) => {
   const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    handleUserStoppedTyping();
+  }, []);
+
+  const handleUserStoppedTyping = async () => {
+    console.log('User stopped typing:', inputValue);
+    const result = await API.post(API_NAMES.autocomplete, "",
+      {
+        headers: {
+          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        },
+        body: {
+          text: inputValue
+        },
+      })
+    setSuggestions(result.message);
+  };
+
+  const [timer, setTimer] = useState<any>();
+  const onStoppedTyping = (event: any) => {
+    clearTimeout(timer);
+    setTimer(setTimeout(() => { handleUserStoppedTyping(); }, 250));
+  }
 
   const handleInputChange = (e: any) => {
     setInputValue(e.target.value);
@@ -25,10 +53,25 @@ const TagInput = ({ tags, setTags }: any) => {
     setTags(tags.filter((tag: any) => tag !== tagToRemove));
   };
 
+  const handleSelectSuggestion = (suggestion: any) => {
+    setInputValue(suggestion);
+    setShowSuggestions(false);
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex space-x-2">
-        <input type="text" value={inputValue} onChange={handleInputChange} onKeyDown={handleKeyPress} placeholder="Add a tag" className="flex-1 rounded border border-gray-300 p-2" />
+        <input type="text" value={inputValue} onKeyUp={onStoppedTyping} onChange={handleInputChange} onFocus={()=>setShowSuggestions(true)} onKeyDown={handleKeyPress} placeholder="Add a tag" className="flex-1 rounded border border-gray-300 p-2" />
+        
+        {showSuggestions && suggestions.length > 0 &&
+          <div className="absolute bg-white mt-12 h-36 w-64 p-2 border-black border-2 rounded overflow-y-scroll overflow-x-hidden">
+            {suggestions.map((suggestion: any, index: any) => (
+              <div key={index} className="p-1 hover:bg-gray-200 rounded cursor-pointer" onClick={() => handleSelectSuggestion(suggestion)}>
+                {suggestion}
+              </div>
+            ))}
+          </div>}
+
         <button className="rounded bg-pc p-2 text-white" onClick={() => handleAddTag()} type="button">
           Add Tag
         </button>

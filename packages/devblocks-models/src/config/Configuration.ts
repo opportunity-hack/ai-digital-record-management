@@ -43,6 +43,11 @@ export const INFRA_CONFIG: StageConfiguration = {
     editDocumentDeploymentName: `${ENVIRONMENT_NAME}-edit-document-deployment`,
     editDocumentStageName: `${ENVIRONMENT_NAME}-edit-document-stage`,
 
+    autocompleteLambdaName: `${ENVIRONMENT_NAME}-autocomplete-lambda`,
+    autocompleteApiName: `${ENVIRONMENT_NAME}-autocomplete-api`,
+    autocompleteDeploymentName: `${ENVIRONMENT_NAME}-autocomplete-deployment`,
+    autocompleteStageName: `${ENVIRONMENT_NAME}-autocomplete-stage`,
+
     locationServiceName: `${ENVIRONMENT_NAME}-location-service`,
 
     storeTextTextractLambdaName: `${ENVIRONMENT_NAME}-store-text-textract-lambda`,

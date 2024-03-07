@@ -14,6 +14,23 @@ const client = new Client({
   node: `https://${process.env.OPENSEARCH_ENDPOINT}` || "", // OpenSearch domain URL
 });
 
+const createNewTagIndex = async () => {
+  
+  const indexExists = await client.indices.exists({ index: "tags" });
+  if (indexExists.statusCode === 200) return;
+
+  await client.indices.create({
+    index: "tags",
+    body: {
+      mappings: {
+        properties: {
+          text: { type: "text" }
+        },
+      },
+    },
+  });
+}
+
 const createNewIndex = async (indexName: string) => {
   const indexExists = await client.indices.exists({ index: indexName });
   if (indexExists.statusCode === 200) return;
@@ -33,12 +50,15 @@ const createNewIndex = async (indexName: string) => {
       },
     },
   });
+
+
 };
 
 export const editObject = async (bucketName: string, objectKey: string, text: string | null, location: string | null, date: string | null, tags: Array<string>) => {
   // Create a new index if it doesn't exist
   const indexName = "documents";
   await createNewIndex(indexName);
+  await createNewTagIndex();
 
   const id = `${bucketName}-${objectKey}`;
 
@@ -57,6 +77,16 @@ export const editObject = async (bucketName: string, objectKey: string, text: st
     body: document,
     refresh: true,
   });
+  
+  if (tags && tags.length > 0) {
+    tags.map((tag) => client.index({
+      id: tag.toLowerCase(),
+      index: "tags",
+      body: {
+        text: tag.toLowerCase(),
+      },
+    }));
+  }
 
   return response;
 };

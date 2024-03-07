@@ -47,7 +47,6 @@ export default function DashboardKeys() {
     footer = <p>You picked {format(editDate, "PP")}.</p>;
   }
 
-
   const onSearch = async (event: any) => {
     try {
       event.preventDefault();
@@ -172,7 +171,7 @@ export default function DashboardKeys() {
         body: {
           text: editText,
           date: editDate ? format(editDate, "MM/dd/yy").toString() : null,
-          // tags: editTags,
+          tags: editTags,
           bucketName: editBucket,
           objectKey: editObjectKey,
         },
