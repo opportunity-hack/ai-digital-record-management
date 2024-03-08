@@ -68,8 +68,8 @@ export const search = async (text: string) => {
 
   if (text.length === 0) {
     query = {
+      size: 100,
       query: {
-        size: 100,
         match_all: {}
       }
     };

@@ -1,7 +1,4 @@
 {
-  "opporhackity-2023-nextjs-ssg-hosting-stack": {
-    "opporhackity2023nextjsssghostingstackdomainname": "d39l5g9aumluml.cloudfront.net"
-  },
   "opporhackity-2023-document-search-stack": {
     "searchdocumentapiendpointregion": "us-west-2",
     "editdocumentapiendpointregion": "us-west-2",
@@ -27,5 +24,8 @@
     "awscognitoregion": "us-west-2",
     "awsuserpoolswebclientid": "466sfql7kusr4b3n449satthos",
     "awscognitoidentitypoolid": "us-west-2:2dda10cb-001c-469c-8fc9-5abdfe1bb6af"
+  },
+  "opporhackity-2023-nextjs-ssg-hosting-stack": {
+    "opporhackity2023nextjsssghostingstackdomainname": "d39l5g9aumluml.cloudfront.net"
   }
 }

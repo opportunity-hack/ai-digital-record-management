@@ -50,7 +50,9 @@ export class DocumentSearchStack extends Stack {
         enabled: false,
       },
       capacity: {
-        masterNodeInstanceType: "t3.small.search",
+        dataNodes: 1,
+        warmNodes: 0,
+        masterNodes: 0,
         dataNodeInstanceType: "t3.small.search",
         multiAzWithStandbyEnabled: false,
       },
@@ -498,6 +500,79 @@ export class DocumentSearchStack extends Stack {
       },
     });
 
+
+    // ====================================================================================================
+    // Lambda function to get files from the s3 bucket
+    // ====================================================================================================
+    const getFilesFromS3 = new lambda.Function(this, "document-get-files-from-s3", {
+      runtime: lambda.Runtime.PYTHON_3_10,
+      code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
+      handler: "getListObjects.handler",
+      environment: {
+        "BUCKET_NAME": documentStorageBucket.bucketName
+      }
+    })
+
+    documentStorageBucket.grantReadWrite(getFilesFromS3);
+
+    getFilesFromS3.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "logs:*",
+          "apigateway:*",
+          "s3:*"
+        ],
+        resources: ["*"],
+      })
+    )
+
+    // lambda fucntion for getting the most recent -> 1 log stream event
+    const getRecentLogs = new lambda.Function(this, "document-get-recent-logs", {
+      runtime: lambda.Runtime.PYTHON_3_11,
+      code: aws_lambda.Code.fromAsset(path.join(__dirname, "../../../../packages/dev-blocks-bulk-upload/lambda")),
+      handler: "getSearchLogs.handler",
+      timeout: Duration.minutes(5),
+      environment: {
+        "BUCKET_NAME": documentStorageBucket.bucketName
+      }
+    });
+
+    documentStorageBucket.grantReadWrite(getRecentLogs);
+
+    getRecentLogs.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "logs:*",
+          "apigateway:*",
+          "s3:*"
+        ],
+        resources: ["*"],
+      })
+    )
+
+    //  List of Objects
+    // get_presigned_URL integration for list of objects
+    const getFilesFromS3_integration = new aws_apigateway.LambdaIntegration(getFilesFromS3);
+
+    // declaring the resource and then adding method
+    const getFilesFromS3_api_path = get_preSignedURL_API.root.addResource('listObjects')
+
+    // adding post method for get object presigned URL
+    getFilesFromS3_api_path.addMethod("GET", getFilesFromS3_integration)
+
+
+    //  Recent Logs
+    // get_presigned_URL integration for recent logs
+    const getRecentLogs_integration = new aws_apigateway.LambdaIntegration(getRecentLogs);
+
+    // declaring the resource and then adding method
+    const getRecentLogs_api_path = get_preSignedURL_API.root.addResource('recentLogs')
+
+    // adding post method for get object presigned URL
+    getRecentLogs_api_path.addMethod("GET", getRecentLogs_integration)
+
     // get_presigned_URL integration
     const get_preSignedURL_integration_put = new aws_apigateway.LambdaIntegration(preserve_search_upload_presigned_url_put);
 
@@ -535,7 +610,7 @@ export class DocumentSearchStack extends Stack {
       exportName: Constants.DocumentSearchConstants.EDIT_DOCUMENT_API_ENDPOINT.replaceAll("_", "-"),
       value: editDocumentApi.url,
     });
-    
+
     new CfnOutput(this, Constants.DocumentSearchConstants.AUTOCOMPLETE_API_ENDPOINT, {
       exportName: Constants.DocumentSearchConstants.AUTOCOMPLETE_API_ENDPOINT.replaceAll("_", "-"),
       value: autocompleteApi.url,

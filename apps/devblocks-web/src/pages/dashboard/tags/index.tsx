@@ -17,6 +17,7 @@ import DashboardLayout from "@/components/dashboard/layout";
 import withAuthenticator from "@/components/template/locked";
 import API_NAMES from "@/constants/api-names";
 import CONFIG from "@/constants/config";
+import ROUTES from "@/constants/routes";
 
 export default function DashboardKeys() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function DashboardKeys() {
           <div className="flex flex-col">
             Tags
             <span className="flex flex-row font-sans font-semibold">
-              All the tags that are currently in use.
+              All the tags that are currently in use. Click on any of them to search for the tag.
             </span>
           </div>
         </span>
@@ -58,7 +59,7 @@ export default function DashboardKeys() {
           </Head>
           <div className="mt-2 flex max-h-64 bg-white shadow-box flex-wrap overflow-y-auto border-2 border-bc p-2">
             {tags.map((tag: any, index: any) => (
-              <div key={tag} className="m-1 flex items-center rounded bg-pc px-3 py-1 text-xs text-white">
+              <div key={tag} className="m-1 flex cursor-pointer items-center rounded bg-pc px-3 py-1 text-xs text-white" onClick={() => router.push(`${ROUTES.dashboard_endpoints}?search=${tag}`)}>
                 {tag}
               </div>
             ))}

@@ -16,9 +16,12 @@ import TagInput from "@/components/dashboard/endpoints/tag-input";
 import withAuthenticator from "@/components/template/locked";
 import API_NAMES from "@/constants/api-names";
 import CONFIG from "@/constants/config";
+import { useSearchParams } from "next/navigation";
 
 export default function DashboardKeys() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -109,22 +112,6 @@ export default function DashboardKeys() {
     }
   }
 
-  function downloadBlob(blob: any, filename: string) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename || "download";
-    const clickHandler = () => {
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        a.removeEventListener("click", clickHandler);
-      }, 150);
-    };
-    a.addEventListener("click", clickHandler, false);
-    a.click();
-    return a;
-  }
-
   // usage
   async function download(objectKey: string) {
     try {
@@ -197,7 +184,7 @@ export default function DashboardKeys() {
         <form className="flex w-full flex-col space-y-2" onSubmit={onSearch}>
           <div className="shadow-box flex h-12 w-full flex-row items-center px-2 text-base">
             <SearchIcon />
-            <input className="ml-2 w-full outline-none" onChange={(e) => setSearchText(e.target.value)} />
+            <input className="ml-2 w-full outline-none" onChange={(e) => setSearchText(e.target.value)} value={searchText}/>
             <button className="-mt-0.5 flex h-7 w-20 max-w-full items-center justify-center rounded border-0 border-none bg-pc font-mono text-sm font-semibold text-white outline-none outline-0" type="submit" disabled={isSearching}>
               {isSearching ? <Spinner /> : "SEARCH!"}
             </button>

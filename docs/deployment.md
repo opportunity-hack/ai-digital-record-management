@@ -4,6 +4,7 @@ In order to complete the steps of this documentation, the following things are n
 - node
 - git
 - aws cli
+- docker
 
 1. The following guide is useful for helping to install node and npm:  
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm  

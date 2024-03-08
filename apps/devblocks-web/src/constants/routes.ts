@@ -3,6 +3,8 @@ const ROUTES = {
   dashboard: "/dashboard",
   dashboard_endpoints: "/dashboard/endpoints",
   dashboard_upload: "/dashboard/upload",
+
+  dashboard_files: "/dashboard/files",
   dashboard_tags: "/dashboard/tags",
 
   dashboard_endpoints_overview: "/dashboard/endpoints/overview",

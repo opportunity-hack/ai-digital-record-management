@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import DashboardItem from "@/components/dashboard/item";
 import ROUTES from "@/constants/routes";
 import { signOut } from "@/services/auth";
-import { Tag, Upload } from "@mui/icons-material";
+import { Folder, Receipt, Tag, Upload } from "@mui/icons-material";
 
 export default function DashboardNavbar() {
   const router = useRouter();
@@ -21,13 +21,15 @@ export default function DashboardNavbar() {
 
         <DashboardItem Icon={RocketLaunchIcon} title="Getting Started" href={ROUTES.dashboard} depth={3} />
         <DashboardItem Icon={SearchIcon} title="Search" href={ROUTES.dashboard_endpoints} depth={3} />
-        {/* <DashboardItem Icon={Tag} title="Tags" href={ROUTES.dashboard_tags} depth={3} /> */}
+        <DashboardItem Icon={Upload} title="Upload" href={ROUTES.dashboard_upload} depth={3} />
 
         {/* If the user is an admin, then show them the following */}
         
-        <span className="mt-3 pl-2 pt-2 font-mono text-xs font-black text-st">UPLOAD</span>
+        <span className="mt-3 pl-2 pt-2 font-mono text-xs font-black text-st">LOGS</span>
         <hr className="" />
-        <DashboardItem Icon={Upload} title="Upload" href={ROUTES.dashboard_upload} depth={3} />
+        <DashboardItem Icon={Tag} title="Tags" href={ROUTES.dashboard_tags} depth={3} />
+        <DashboardItem Icon={Folder} title="Files" href={ROUTES.dashboard_files} depth={3} />
+
       </span>
       <span className="space-y-4">
         {/* <DashboardItem Icon={SettingsRoundedIcon} title="Settings" href={routes.docs} depth={3} /> */}
