@@ -53,6 +53,6 @@ export const extractTextFromObject = async (bucketName: string, objectKey: strin
     case "m4a":
       return extractTextFromAudio(bucketName, objectKey);
     default:
-      return "File type not supported!";
+      return "File type not supported! Please extract text manually and edit the object.";
   }
 };

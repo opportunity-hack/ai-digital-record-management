@@ -21,7 +21,7 @@ export default function ConfirmUser() {
     const email = searchParams.get("username") || "";
     const response = await confirmSignUp(email, confirmationCode);
 
-    if (response === "Success") router.push(ROUTES.dashboard);
+    if (response === "Success") router.push(ROUTES.login);
     setStatus(response);
   };
 

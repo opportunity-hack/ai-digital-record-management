@@ -81,7 +81,7 @@ export default function DashboardKeys() {
   const editRow = (row: any) => {
     setEditId(row._id);
     setEditText(row._source.text);
-    setEditDate(new Date(row._source.date));
+    setEditDate(row._source.date ? new Date(row._source.date): undefined);
     setModalActive(true);
     setEditTags(row._source.tags);
     setEditBucket(row._source.bucketName);
@@ -184,7 +184,7 @@ export default function DashboardKeys() {
         <form className="flex w-full flex-col space-y-2" onSubmit={onSearch}>
           <div className="shadow-box flex h-12 w-full flex-row items-center px-2 text-base">
             <SearchIcon />
-            <input className="ml-2 w-full outline-none" onChange={(e) => setSearchText(e.target.value)} value={searchText}/>
+            <input className="ml-2 w-full outline-none" onChange={(e) => setSearchText(e.target.value)} value={searchText} />
             <button className="-mt-0.5 flex h-7 w-20 max-w-full items-center justify-center rounded border-0 border-none bg-pc font-mono text-sm font-semibold text-white outline-none outline-0" type="submit" disabled={isSearching}>
               {isSearching ? <Spinner /> : "SEARCH!"}
             </button>
@@ -307,7 +307,11 @@ export default function DashboardKeys() {
             </label>
             <label className="mt-2" htmlFor="date" onFocus={handleFocus} onBlur={handleBlur}>
               <div>Date</div>
-              <input className="w-full rounded-sm border-2 border-bc p-2 outline-none" name="date" readOnly value={editDate ? format(editDate, "MM/dd/yy") : ""} />
+              <div className="w-full rounded-sm border-2 border-bc p-2 outline-none flex flex-row" >
+                <input className="w-full outline-none" name="date" readOnly value={editDate ? format(editDate, "MM/dd/yy") : ""} />
+                <button onClick={() => setEditDate(undefined)}><Close /></button>
+              </div>
+
               {dateIsFocused && <DayPicker className="color-black shadow-box absolute left-0 bg-white p-2" mode="single" selected={editDate} onSelect={setEditDate} footer={footer} showOutsideDays fixedWeeks />}
             </label>
             {/* <label className="mt-2" htmlFor="location">
