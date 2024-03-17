@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import DashboardItem from "@/components/dashboard/item";
 import ROUTES from "@/constants/routes";
 import { signOut } from "@/services/auth";
-import { Folder, Receipt, Tag, Upload } from "@mui/icons-material";
+import { Folder, History, Receipt, Storage, Tag, Upload } from "@mui/icons-material";
 
 export default function DashboardNavbar() {
   const router = useRouter();
@@ -27,6 +27,7 @@ export default function DashboardNavbar() {
         
         <span className="mt-3 pl-2 pt-2 font-mono text-xs font-black text-st">LOGS</span>
         <hr className="" />
+        <DashboardItem Icon={Storage} title="Logs" href={ROUTES.dashboard_logs} depth={3} />
         <DashboardItem Icon={Tag} title="Tags" href={ROUTES.dashboard_tags} depth={3} />
         <DashboardItem Icon={Folder} title="Files" href={ROUTES.dashboard_files} depth={3} />
 

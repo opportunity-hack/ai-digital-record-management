@@ -1,4 +1,7 @@
 {
+  "opporhackity-2023-nextjs-ssg-hosting-stack": {
+    "opporhackity2023nextjsssghostingstackdomainname": "d45mbkg177yzi.cloudfront.net"
+  },
   "opporhackity-2023-document-search-stack": {
     "searchdocumentapiendpointregion": "us-west-2",
     "editdocumentapiendpointregion": "us-west-2",
@@ -16,9 +19,6 @@
     "getpresignedurlput": "https://62y7n7r3b2.execute-api.us-west-2.amazonaws.com/prod/",
     "ExportsOutputRefopporhackity2023searchdocumentapidevuswest2DeploymentStageprod0022F20E665C4E87": "prod",
     "searchdocumentapiendpoint": "https://hpqqrrk5jg.execute-api.us-west-2.amazonaws.com/prod/"
-  },
-  "opporhackity-2023-nextjs-ssg-hosting-stack": {
-    "opporhackity2023nextjsssghostingstackdomainname": "d45mbkg177yzi.cloudfront.net"
   },
   "opporhackity-2023-amplify-stack": {
     "awsuserpoolsid": "us-west-2_9QITNzdxu",

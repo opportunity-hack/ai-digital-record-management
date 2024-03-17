@@ -280,6 +280,12 @@ export class DocumentSearchStack extends Stack {
       }),
     );
 
+    const searchDocumentLogGroup = new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group-1232", {
+      logGroupName: "preserve_search_get_object_preSignedURL_api_log_group-1232",
+      retention: aws_logs.RetentionDays.ONE_MONTH,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
+
     const searchDocumentApi = new aws_apigateway.LambdaRestApi(this, `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}-${props.env?.region}`, {
       restApiName: `${props.documentSearchStackConfiguration.searchDocumentApiName}-${props.stage}`,
       handler: searchDocumentLambda,
@@ -288,6 +294,11 @@ export class DocumentSearchStack extends Stack {
         allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
         allowHeaders: aws_apigateway.Cors.DEFAULT_HEADERS,
         allowMethods: aws_apigateway.Cors.ALL_METHODS,
+      },
+      deployOptions: {
+        accessLogDestination: new aws_apigateway.LogGroupLogDestination(
+          searchDocumentLogGroup
+        ),
       },
     });
     const searchDocumentIntegration = new aws_apigateway.LambdaIntegration(searchDocumentLambda);
@@ -437,15 +448,6 @@ export class DocumentSearchStack extends Stack {
     // API to get the presigned URL
     const get_preSignedURL_API = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API-1232", {
       cloudWatchRole: true,
-      deployOptions: {
-        accessLogDestination: new aws_apigateway.LogGroupLogDestination(
-          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group-1232", {
-            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group-1232",
-            retention: aws_logs.RetentionDays.ONE_MONTH,
-            removalPolicy: RemovalPolicy.DESTROY,
-          }),
-        ),
-      },
       defaultCorsPreflightOptions: {
         allowHeaders: ["*"],
         allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
@@ -484,15 +486,6 @@ export class DocumentSearchStack extends Stack {
     // API to get the presigned URL
     const get_preSignedURL_API_put = new aws_apigateway.RestApi(this, "dpreserve_search_get_object_preSignedURL_API_put-1232", {
       cloudWatchRole: true,
-      deployOptions: {
-        accessLogDestination: new aws_apigateway.LogGroupLogDestination(
-          new aws_logs.LogGroup(this, "preserve_search_get_object_preSignedURL_api_log_group_put-1232", {
-            logGroupName: "preserve_search_get_object_preSignedURL_api_log_group_put-1232",
-            retention: aws_logs.RetentionDays.ONE_MONTH,
-            removalPolicy: RemovalPolicy.DESTROY,
-          }),
-        ),
-      },
       defaultCorsPreflightOptions: {
         allowHeaders: ["*"],
         allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
@@ -534,7 +527,7 @@ export class DocumentSearchStack extends Stack {
       handler: "getSearchLogs.handler",
       timeout: Duration.minutes(5),
       environment: {
-        "BUCKET_NAME": documentStorageBucket.bucketName
+        "CLOUDWATCH_LOG_NAME": searchDocumentLogGroup.logGroupName
       }
     });
 

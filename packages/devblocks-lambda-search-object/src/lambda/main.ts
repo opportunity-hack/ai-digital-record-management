@@ -21,8 +21,6 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
     };
   }
 
-  console.log(parsedBody);
-  console.log(parsedBody.text);
 
   const searchResults = await search(parsedBody.text, parsedBody.location, parsedBody.date, parsedBody.tags);
   const response = {
@@ -35,5 +33,8 @@ export const handler = async (event: APIGatewayEvent, _: any = {}) => {
       message: searchResults,
     }),
   };
+
+  console.log("[SEARCHED] ", `text: ${parsedBody.text} | date: ${parsedBody.date} | tags: ${parsedBody.tags}\n[RESULTS] ${searchResults.length} results found`);
+
   return response;
 };

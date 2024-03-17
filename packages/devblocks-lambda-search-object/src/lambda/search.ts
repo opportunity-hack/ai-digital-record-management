@@ -111,8 +111,6 @@ export const search = async (text: string, location: string, date: Date, tags: A
     });
   }
 
-  console.log(must);
-
   const query = {
     query: {
       bool: {
@@ -121,8 +119,6 @@ export const search = async (text: string, location: string, date: Date, tags: A
       }
     },
   };
-
-  console.log(query);
 
   const response = await client.search({
     index: indexName,
