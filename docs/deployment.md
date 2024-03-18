@@ -175,6 +175,8 @@ Write y and click enter for all the prompts that show up
 
 This should take around 10-20 minutes as CDK deploys the resources to the cloud. So feel free to go grab a cup of coffee or something while this is happening. ☕
 
+3. After the CDK has deployed the stack in your AWS account, go to the "Cloudformation" in your AWS console. Click on the "Opportunity-Hack-document-search" stack and then click on the resources tab. Click on the search bar to find the "SearchDocument" lambda function, you can identify the function by seeing the type of the resource in the table and clicking on the link adjacent to it, which will take you to the lambda function. In the lambda console click con monitoring and then click on the "Cloud Watch Logs" button, which will take you to the Cloudwatch log group. Copy the name of the cloud watch log group and save it somewhere on your device. Now, go back to the cloud formation in the AWS console, search for the "get logs" lambda function, and go to the lambda console for that function. In the lambda function, you will see the option, "Configuration" Click on it and then click on "Environmental variable" and add the value of the copied log group name to the variable, and save it.
+
 ## Deploying Frontend
 Once the backend is deployed, we will now deploy the frontend.
 1. We will have to run things from the directory `apps/devblocks-web`. As such, create a new terminal. And from the root of the project directory, run:
