@@ -21,7 +21,7 @@ import { log } from "console";
 
 export default function DashboardKeys() {
   const router = useRouter();
-  const [logs, setLogs] = useState(undefined);
+  const [logs, setLogs] = useState([]);
 
   useEffect(() => {
     getRecentLogs();
