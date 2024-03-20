@@ -81,7 +81,7 @@ export default function DashboardKeys() {
   const editRow = (row: any) => {
     setEditId(row._id);
     setEditText(row._source.text);
-    setEditDate(row._source.date ? new Date(row._source.date): undefined);
+    setEditDate(row._source.date ? new Date(row._source.date): undefined  );
     setModalActive(true);
     setEditTags(row._source.tags);
     setEditBucket(row._source.bucketName);
