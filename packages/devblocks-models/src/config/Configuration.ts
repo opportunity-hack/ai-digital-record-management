@@ -1,6 +1,6 @@
 import type { StageConfiguration } from "../models/StageConfiguration";
 
-export const APP_NAME: string = "opporhackity-2023";
+export const APP_NAME: string = "oportuniti-2023";
 export const ENVIRONMENT_NAME: string = APP_NAME.toLowerCase();
 
 export const INFRA_CONFIG: StageConfiguration = {
