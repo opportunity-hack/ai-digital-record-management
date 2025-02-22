@@ -22,7 +22,7 @@ npm install -g yarn aws-cdk
 # **Setup**
 1. First clone the repository. To clone, run:
 ```bash
-git clone https://github.com/2023-opportunity-hack/syntax-error--DigitalRecordsManagementforMuseumsandHistoricalSites
+git clone https://github.com/opportunity-hack/ai-digital-record-management
 ```
 <br/>
 <br/>
